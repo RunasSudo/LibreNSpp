@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       LibreNS++
 // @namespace  https://github.com/RunasSudo/LibreNSpp
-// @version    0.0a2
+// @version    0.0a3
 // @description  Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match      http://nationstates.net/*
 // @match      http://www.nationstates.net/*
@@ -11,26 +11,30 @@
 // ==/UserScript==
 
 //Infinite RMB scroll
-if (window.location.href.indexOf("/region=") >= 0) { //Are we on the RMB page?
-    rmb = $(".rmbtable2");
-    rmb.children().each(function(i,entry){rmb.prepend(entry)}); //Reverse order so newest are at top.
-    $(".rmbolder").hide(); //GO AWAI!
-    
-    $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-    
-    //Add scroll detector
-    $("<div id=\"infiniteScroll\" style=\"border: 1px #CCC solid; border-radius: 12px; -moz-border-radius: 12px; -webkit-border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;\"></div>")
-    .html("Infinite Scroll!")
-    .insertAfter(rmb.parent());
-    
-    infiniteScroll();
-    updateRMB();
+function run() {
+    if (window.location.href.indexOf("/region=") >= 0) { //Are we on the RMB page?
+        rmb = $(".rmbtable2");
+        rmb.children().each(function(i, entry) {
+            rmb.prepend(entry); //Reverse order so newest are at top.
+        });
+        $(".rmbolder").hide(); //GO AWAI!
+        
+        $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
+        
+        //Add scroll detector
+        $("<div id=\"infiniteScroll\" style=\"border: 1px #CCC solid; border-radius: 12px; -moz-border-radius: 12px; -webkit-border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;\"></div>")
+        .html("Infinite Scroll!")
+        .insertAfter(rmb.parent());
+        
+        infiniteScroll();
+        updateRMB();
+    }
 }
 
 //LibreNS++ functions
 var rmbOffset = 0;
 function infiniteScroll() {
-    if (isScrolledIntoView("#infiniteScroll")) {
+    if ($("#infiniteScroll").offset().top <= $(window).scrollTop() + $(window).height()) { //Check if #infiniteScroll is in view.
         //Load new RMB messages.
         $("#infiniteScroll").html("Loading&hellip;");
         rmbOffset += 10;
@@ -63,12 +67,6 @@ function updateRMB() {
 }
 
 //Utility functions
-function isScrolledIntoView(elem) { //https://stackoverflow.com/questions/487073/check-if-element-is-visible-after-scrolling
-    var docViewTop = $(window).scrollTop();
-    var docViewBottom = docViewTop + $(window).height();
-    
-    var elemTop = $(elem).offset().top;
-    var elemBottom = elemTop + $(elem).height();
-    
-    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-}
+
+//Run!
+run();
