@@ -33,7 +33,7 @@ function infiniteScroll() {
         //Load new RMB messages
         $("#infiniteScroll").html("Loading&hellip;");
         rmbOffset += 10;
-        $.get("/page=ajax/a=rmb/region=" + "democratic_socialist_assembly" + "/offset=" + rmbOffset, function(data) {
+        $.get("/page=ajax/a=rmb/region=" + window.location.href.substring(window.location.href.indexOf("/region=") + 8) + "/offset=" + rmbOffset, function(data) {
             if (data.length > 1) {
                 $($(data).get().reverse()).insertAfter(".rmbrow:last");
                 $("#infiniteScroll").html("Infinite Scroll!");
