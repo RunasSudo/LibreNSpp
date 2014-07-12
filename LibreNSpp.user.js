@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       LibreNS++
 // @namespace  https://github.com/RunasSudo/LibreNSpp
-// @version    0.0a1
+// @version    0.0a2
 // @description  Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match      http://nationstates.net/*
 // @match      http://www.nationstates.net/*
@@ -24,13 +24,14 @@ if (window.location.href.indexOf("/region=") >= 0) { //Are we on the RMB page?
     .insertAfter(rmb.parent());
     
     infiniteScroll();
+    updateRMB();
 }
 
 //LibreNS++ functions
 var rmbOffset = 0;
 function infiniteScroll() {
     if (isScrolledIntoView("#infiniteScroll")) {
-        //Load new RMB messages
+        //Load new RMB messages.
         $("#infiniteScroll").html("Loading&hellip;");
         rmbOffset += 10;
         $.get("/page=ajax/a=rmb/region=" + window.location.href.substring(window.location.href.indexOf("/region=") + 8) + "/offset=" + rmbOffset, function(data) {
@@ -39,11 +40,26 @@ function infiniteScroll() {
                 $("#infiniteScroll").html("Infinite Scroll!");
             } else {
                 $("#infiniteScroll").html("At earliest message.");
+                rmbOffset = -1;
             }
         });
     }
     
-    setTimeout(infiniteScroll, 1000);
+    if (rmbOffset >= 0) {
+        setTimeout(infiniteScroll, 1000);
+    }
+}
+
+function updateRMB() {
+    $.get("/page=ajax/a=rmb/region=" + window.location.href.substring(window.location.href.indexOf("/region=") + 8) + "/offset=0", function(data) {
+        $(data).each(function(i, post) {
+            if ($("div#" + post.id).length == 0) { //It's a new post!
+                $(post).insertBefore(".rmbrow:first");
+            }
+        });
+    });
+    
+    setTimeout(updateRMB, 5000);
 }
 
 //Utility functions
