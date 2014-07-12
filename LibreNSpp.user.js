@@ -108,17 +108,23 @@ function populatePuppets() {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
             value = GM_getValue(allSettings[i]);
             link = $("<a href=\"javascript:void(0);\">" + atob(value.substring(0, value.indexOf(":"))) + "</a>");
-            link.click(function() {
-                $("#loginbox input[name='nation']").val(atob(value.substring(0, value.indexOf(":"))));
-                $("#loginbox input[name='password']").val(atob(value.substring(value.indexOf(":") + 1)));
-                $("#loginbox input[name='autologin']").prop("checked", true);
-                
-                //Nasty hack follows
-                //Note to self: Never give submit button name="submit"
-                HTMLFormElement.prototype.submit.call(document.getElementById("loginbox").getElementsByTagName("form")[0]);
-            });
-            $("#listPuppets").prepend("<br>");
-            $("#listPuppets").prepend(link);
+            
+            //Bloody JavaScript... :P
+            (function(safeValue) {
+                link.click(function() {
+                    console.log(safeValue);
+                    
+                    $("#loginbox input[name='nation']").val(atob(safeValue.substring(0, safeValue.indexOf(":"))));
+                    $("#loginbox input[name='password']").val(atob(safeValue.substring(safeValue.indexOf(":") + 1)));
+                    $("#loginbox input[name='autologin']").prop("checked", true);
+                    
+                    //Nasty hack follows
+                    //Note to self: Never give submit button name="submit"
+                    HTMLFormElement.prototype.submit.call(document.getElementById("loginbox").getElementsByTagName("form")[0]);
+                });
+                $("#listPuppets").prepend("<br>");
+                $("#listPuppets").prepend(link);
+            })(value);
         }
     }
 }
