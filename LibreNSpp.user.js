@@ -18,9 +18,9 @@ function run() {
         //--------------------
         //Load region settings
         var regionSettings;
-        if ($(".dispatchlist h3").get(0)) {
-            if ($(".dispatchlist h3 a").get(0).innerText == "LibreNS++") {
-                $.get($(".dispatchlist h3 a").get(0).href, function(data) {
+        for (var i = 0; i < $(".dispatchlist h3 a").length; i++) {
+            if ($(".dispatchlist h3 a").get(i).innerText == "LibreNS++") {
+                $.get($(".dispatchlist h3 a").get(i).href, function(data) {
                     regionSettings = $.parseJSON(atob($(data).find("#dispatch p").get(0).innerText));
                     
                     //Settings dependent stuff
@@ -33,6 +33,7 @@ function run() {
                             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
                     }
                 });
+                break;
             }
         }
         
@@ -77,7 +78,7 @@ function run() {
     });
     $("#btnClearPuppets").click(function() {
         var allSettings = GM_listValues();
-        for (i = 0; i < allSettings.length; i++) {
+        for (var i = 0; i < allSettings.length; i++) {
             if (allSettings[i].indexOf("puppet_p_") == 0) {
                 GM_deleteValue(allSettings[i]);
             }
