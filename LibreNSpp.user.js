@@ -1,19 +1,17 @@
 // ==UserScript==
 // @name       LibreNS++
 // @namespace  https://github.com/RunasSudo/LibreNSpp
-// @version    0.0a4
+// @version    0.0a5
 // @description  Free as in 'free speech', 'free beer' and 'free from tyranny'.
-// @match      http://nationstates.net/*
-// @match      http://www.nationstates.net/*
-// @match      https://nationstates.net/*
-// @match      https://www.nationstates.net/*
+// @match      http://*.nationstates.net/*
+// @match      https://*.nationstates.net/*
 // @copyright  2014, RunasSudo
 // ==/UserScript==
 
 function run() {
     //====================
     //Infinite RMB scroll
-    if (window.location.href.indexOf("/region=") >= 0) { //Are we on the RMB page?
+    if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
         rmb = $(".rmbtable2");
         rmb.children().each(function(i, entry) {
             rmb.prepend(entry); //Reverse order so newest are at top.
@@ -130,6 +128,9 @@ function populatePuppets() {
 }
 
 //Utility functions
+function getPageBits() {
+    return window.location.href.substring(window.location.href.indexOf("nationstates.net/") + 17).split("/");
+}
 
 //Run!
 run();
