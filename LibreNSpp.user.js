@@ -120,6 +120,9 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
         $(data).each(function(i, post) {
             if ($("div#" + post.id).length == 0) { //It's a new post!
                 $(post).insertBefore(".rmbrow:first");
+                rmbOffset += 1;
+            } else {
+                $("div#" + post.id).html($(post).html());
             }
         });
     });
