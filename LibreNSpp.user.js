@@ -1,18 +1,43 @@
 // ==UserScript==
 // @name       LibreNS++
 // @namespace  https://github.com/RunasSudo/LibreNSpp
-// @version    0.0a5
+// @version    0.0a6
 // @description  Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match      http://*.nationstates.net/*
 // @match      https://*.nationstates.net/*
 // @copyright  2014, RunasSudo
 // ==/UserScript==
 
+//====================
+//Basic Code
 function run() {
-    //====================
-    //Infinite RMB scroll
+    //--------------------
+    //Region page things
     if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
-        rmb = $(".rmbtable2");
+        //--------------------
+        //Load region settings
+        var regionSettings;
+        if ($(".dispatchlist h3").get(0)) {
+            if ($(".dispatchlist h3 a").get(0).innerText == "LibreNS++") {
+                $.get($(".dispatchlist h3 a").get(0).href, function(data) {
+                    regionSettings = $.parseJSON(atob($(data).find("#dispatch p").get(0).innerText));
+                    
+                    //Settings dependent stuff
+                    //--------------------
+                    //Custom titles
+                    if (regionSettings.titles) {
+                        if (regionSettings.titles.delegate)
+                            $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
+                        if (regionSettings.titles.founder)
+                            $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
+                    }
+                });
+            }
+        }
+        
+        //--------------------
+        //Infinite RMB scroll
+        var rmb = $(".rmbtable2");
         rmb.children().each(function(i, entry) {
             rmb.prepend(entry); //Reverse order so newest are at top.
         });
@@ -26,10 +51,13 @@ function run() {
         .insertAfter(rmb.parent());
         
         infiniteScroll();
+        
+        //--------------------
+        //Live RMB updates
         updateRMB();
     }
     
-    //====================
+    //--------------------
     //Puppet Switcher
     $("#banner, #nsbanner").prepend(
         $("<div id=\"puppetsbox\" style=\"position: absolute; top: 0; right: 130px; margin: 6px 16px 0 0; z-index: 100;\"></div>")
@@ -46,7 +74,7 @@ function run() {
         $("#puppetsbox_popup").fadeToggle();
     });
     $("#btnClearPuppets").click(function() {
-        allSettings = GM_listValues();
+        var allSettings = GM_listValues();
         for (i = 0; i < allSettings.length; i++) {
             if (allSettings[i].indexOf("puppet_p_") == 0) {
                 GM_deleteValue(allSettings[i]);
@@ -55,14 +83,15 @@ function run() {
         populatePuppets();
     });
     $("#btnAddPuppet").click(function() {
-        username = prompt("Puppet Username?", "");
-        password = prompt("Puppet Password?", "Cover your screen!");
+        var username = prompt("Puppet Username?", "");
+        var password = prompt("Puppet Password?", "Cover your screen!");
         GM_setValue("puppet_p_" + username.toLowerCase().replace(" ", "_"), btoa(username) + ":" + btoa(password));
         populatePuppets();
     });
     populatePuppets();
 }
 
+//====================
 //LibreNS++ functions
 var rmbOffset = 0;
 function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling.
@@ -101,36 +130,39 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
 function populatePuppets() {
     $("#listPuppets").html("<br>");
     
-    allSettings = GM_listValues();
+    var allSettings = GM_listValues();
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
-            value = GM_getValue(allSettings[i]);
-            link = $("<a href=\"javascript:void(0);\">" + atob(value.substring(0, value.indexOf(":"))) + "</a>");
+            var value = GM_getValue(allSettings[i]);
+            var link = $("<a href=\"javascript:void(0);\">" + atob(value.substring(0, value.indexOf(":"))) + "</a>");
             
-            //Bloody JavaScript... :P
-            (function(safeValue) {
-                link.click(function() {
-                    console.log(safeValue);
-                    
-                    $("#loginbox input[name='nation']").val(atob(safeValue.substring(0, safeValue.indexOf(":"))));
-                    $("#loginbox input[name='password']").val(atob(safeValue.substring(safeValue.indexOf(":") + 1)));
-                    $("#loginbox input[name='autologin']").prop("checked", true);
-                    
-                    //Nasty hack follows
-                    //Note to self: Never give submit button name="submit"
-                    HTMLFormElement.prototype.submit.call(document.getElementById("loginbox").getElementsByTagName("form")[0]);
-                });
-                $("#listPuppets").prepend("<br>");
-                $("#listPuppets").prepend(link);
-            })(value);
+            link.click(makeSwitchPuppetHandler(value));
+            $("#listPuppets").prepend("<br>");
+            $("#listPuppets").prepend(link);
         }
     }
 }
 
+function makeSwitchPuppetHandler(value) {
+    return function() {
+        console.log(value);
+        
+        $("#loginbox input[name='nation']").val(atob(value.substring(0, value.indexOf(":"))));
+        $("#loginbox input[name='password']").val(atob(value.substring(value.indexOf(":") + 1)));
+        $("#loginbox input[name='autologin']").prop("checked", true);
+        
+        //Nasty hack follows
+        //Note to self: Never give submit button name="submit"
+        HTMLFormElement.prototype.submit.call(document.getElementById("loginbox").getElementsByTagName("form")[0]);
+    }
+}
+
+//====================
 //Utility functions
 function getPageBits() {
     return window.location.href.substring(window.location.href.indexOf("nationstates.net/") + 17).split("/");
 }
 
-//Run!
+//====================
+//Run it!
 run();
