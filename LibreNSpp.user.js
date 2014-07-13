@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name       LibreNS++
-// @namespace  https://github.com/RunasSudo/LibreNSpp
-// @version    0.0a6
-// @description  Free as in 'free speech', 'free beer' and 'free from tyranny'.
-// @match      http://*.nationstates.net/*
-// @match      https://*.nationstates.net/*
-// @copyright  2014, RunasSudo
+// @name        LibreNS++
+// @namespace   https://github.com/RunasSudo/LibreNSpp
+// @version     0.0a7
+// @description Free as in 'free speech', 'free beer' and 'free from tyranny'.
+// @match       http://*.nationstates.net/*
+// @match       https://*.nationstates.net/*
+// @require     https://github.com/SoapBox/jQuery-linkify/raw/master/dist/jquery.linkify.min.js
+// @copyright   2014, RunasSudo
 // ==/UserScript==
 
 //====================
@@ -39,6 +40,7 @@ function run() {
         //Infinite RMB scroll
         var rmb = $(".rmbtable2");
         rmb.children().each(function(i, entry) {
+            $(entry).linkify();
             rmb.prepend(entry); //Reverse order so newest are at top.
         });
         $(".rmbolder").hide(); //GO AWAI!
@@ -101,7 +103,7 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
         rmbOffset += 10;
         $.get("/page=ajax/a=rmb/region=" + window.location.href.substring(window.location.href.indexOf("/region=") + 8) + "/offset=" + rmbOffset, function(data) {
             if (data.length > 1) {
-                $($(data).get().reverse()).insertAfter(".rmbrow:last");
+                $($(data).get().reverse()).insertAfter(".rmbrow:last").linkify();
                 $("#infiniteScroll").html("Infinite Scroll!");
             } else {
                 $("#infiniteScroll").html("At earliest message.");
@@ -119,10 +121,10 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
     $.get("/page=ajax/a=rmb/region=" + window.location.href.substring(window.location.href.indexOf("/region=") + 8) + "/offset=0", function(data) {
         $(data).each(function(i, post) {
             if ($("div#" + post.id).length == 0) { //It's a new post!
-                $(post).insertBefore(".rmbrow:first");
+                $(post).insertBefore(".rmbrow:first").linkify();
                 rmbOffset += 1;
             } else {
-                $("div#" + post.id).html($(post).html());
+                $("div#" + post.id).html($(post).html()).linkify();
             }
         });
     });
@@ -157,7 +159,7 @@ function makeSwitchPuppetHandler(value) {
         //Nasty hack follows
         //Note to self: Never give submit button name="submit"
         HTMLFormElement.prototype.submit.call(document.getElementById("loginbox").getElementsByTagName("form")[0]);
-    }
+    };
 }
 
 //====================
