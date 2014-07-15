@@ -138,15 +138,14 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
             if (data.length > 1) {
                 $($(data).get().reverse()).insertAfter(".rmbrow:last").linkify();
                 $("#infiniteScroll").html("Infinite Scroll!");
+                setTimeout(infiniteScroll, 500);
             } else {
                 $("#infiniteScroll").html("At earliest message.");
-                rmbOffset = -1;
+                rmbOffset -= 10;
             }
         });
-    }
-    
-    if (rmbOffset >= 0) { //Stop if at earliest message.
-        setTimeout(infiniteScroll, 1000);
+    } else {
+        setTimeout(infiniteScroll, 500);
     }
 }
 
