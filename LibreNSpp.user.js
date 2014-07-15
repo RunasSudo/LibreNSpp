@@ -42,7 +42,7 @@ function run() {
                             ircURL += regionSettings.irc.server + "/";
                             if (regionSettings.irc.channel)
                                 ircURL += regionSettings.irc.channel;
-                            $("<iframe src=\"" + ircURL + "\" style=\"border:0; width:100%; height:450px;\"></iframe><div class=\"hzln\"></div>").insertBefore($("h2:contains(Today's World Census Report)"));
+                            $('<iframe src="' + ircURL + '" style="border:0; width:100%; height:450px;"></iframe><div class="hzln"></div>').insertBefore($("h2:contains(Today's World Census Report)"));
                         }
                     }
                 });
@@ -62,7 +62,7 @@ function run() {
         $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
         
         //Add scroll detector
-        $("<div id=\"infiniteScroll\" style=\"border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;\"></div>")
+        $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
         .html("Infinite Scroll!")
         .insertAfter(rmb.parent());
         
@@ -80,10 +80,10 @@ function run() {
             regionSettings = JSON.parse(atob($("textarea[name=\"message\"]").val().split("\n")[2]));
         
         //Create fields
-        $("<tr></tr>").append($("<td class=\"leftside\">Founder Title:</td>")).append($("<td></td>").append($("<input id=\"settingTitleFounder\">").keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
-        $("<tr></tr>").append($("<td class=\"leftside\">Delegate Title:</td>")).append($("<td></td>").append($("<input id=\"settingTitleDelegate\">").keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
-        $("<tr></tr>").append($("<td class=\"leftside\">IRC Server:</td>")).append($("<td></td>").append($("<input id=\"settingIRCServer\">").keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
-        $("<tr></tr>").append($("<td class=\"leftside\">IRC Channel:</td>")).append($("<td></td>").append($("<input id=\"settingIRCChannel\">").keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+        $("<tr></tr>").append($('<td class="leftside">Founder Title:</td>')).append($("<td></td>").append($('<input id="settingTitleFounder">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+        $("<tr></tr>").append($('<td class="leftside">Delegate Title:</td>')).append($("<td></td>").append($('<input id="settingTitleDelegate">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+        $("<tr></tr>").append($('<td class="leftside">IRC Server:</td>')).append($("<td></td>").append($('<input id="settingIRCServer">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+        $("<tr></tr>").append($('<td class="leftside">IRC Channel:</td>')).append($("<td></td>").append($('<input id="settingIRCChannel">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
         
         //Populate fields
         $("#settingTitleFounder").val((regionSettings.titles && regionSettings.titles.founder) ? regionSettings.titles.founder : "Founder");
@@ -95,15 +95,15 @@ function run() {
     //--------------------
     //Puppet Switcher
     $("#banner, #nsbanner").prepend(
-        $("<div id=\"puppetsbox\" style=\"position: absolute; top: 0; right: 130px; margin: 6px 16px 0 0; z-index: 100;\"></div>")
-        .html("<a id=\"puppetsbox_button\" href=\"javascript:void(0);\" style=\"color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;\">"
+        $('<div id="puppetsbox" style="position: absolute; top: 0; right: 130px; margin: 6px 16px 0 0; z-index: 100;"></div>')
+        .html('<a id="puppetsbox_button" href="javascript:void(0);" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">'
               + "Puppets</a>")
     );
     $("#banner, #nsbanner").append(
-        $("<div id=\"puppetsbox_popup\" style=\"color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 32px; right: 145px; padding: 8px; border-radius: 8px; display: none;\">"
-          + "<span id=\"listPuppets\"></span>"
-          + "<a id=\"btnClearPuppets\" href=\"javascript:void(0);\">Clear Puppets</a><br>"
-          + "<a id=\"btnAddPuppet\" href=\"javascript:void(0);\">Add Puppet</a></div>")
+        $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 32px; right: 145px; padding: 8px; border-radius: 8px; display: none;">'
+          + '<span id="listPuppets"></span>'
+          + '<a id="btnClearPuppets" href="javascript:void(0);">Clear Puppets</a><br>'
+          + '<a id="btnAddPuppet" href="javascript:void(0);">Add Puppet</a></div>')
     );
     $("#puppetsbox_button").click(function() {
         $("#puppetsbox_popup").fadeToggle();
@@ -172,7 +172,7 @@ function populatePuppets() {
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
             var value = GM_getValue(allSettings[i]);
-            var link = $("<a href=\"javascript:void(0);\">" + atob(value.substring(0, value.indexOf(":"))) + "</a>");
+            var link = $('<a href="javascript:void(0);">' + atob(value.substring(0, value.indexOf(":"))) + "</a>");
             
             link.click(makeSwitchPuppetHandler(value));
             $("#listPuppets").prepend("<br>");
