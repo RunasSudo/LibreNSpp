@@ -57,12 +57,17 @@ function populatePuppetManager() {
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
             var value = GM_getValue(allSettings[i]);
-            var link = $('<a href="javascript:void(0);">Delete</a>');
 
-            link.click(makeDeletePuppetHandler(allSettings[i]));
+            var linkTop = $('<a href="javascript:void(0);">Top</a>');
+            linkTop.click(makeTopPuppetHandler(allSettings[i]));
+
+            var linkDelete = $('<a href="javascript:void(0);">Delete</a>');
+            linkDelete.click(makeDeletePuppetHandler(allSettings[i]));
 
             var li = $('<li> | ' + atob(value.substring(0, value.indexOf(":"))) + '</li>');
-            li.prepend(link);
+            li.prepend(linkDelete);
+            li.prepend(' | ');
+            li.prepend(linkTop);
 
             $("#puppetList").prepend(li);
         }
@@ -78,6 +83,16 @@ function makeSwitchPuppetHandler(value) {
         //Nasty hack follows
         //Note to self: Never give submit button name="submit"
         HTMLFormElement.prototype.submit.call(document.getElementById("loginbox").getElementsByTagName("form")[0]);
+    };
+}
+
+function makeTopPuppetHandler(name) {
+    return function() {
+        var value = GM_getValue(name);
+        GM_deleteValue(name);
+        GM_setValue(name, value);
+        populatePuppets();
+        populatePuppetManager();
     };
 }
 
