@@ -58,16 +58,11 @@ function populatePuppetManager() {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
             var value = GM_getValue(allSettings[i]);
 
-            var linkTop = $('<a href="javascript:void(0);">Top</a>');
-            linkTop.click(makeTopPuppetHandler(allSettings[i]));
-
             var linkDelete = $('<a href="javascript:void(0);">Delete</a>');
             linkDelete.click(makeDeletePuppetHandler(allSettings[i]));
 
             var li = $('<li> | ' + atob(value.substring(0, value.indexOf(":"))) + '</li>');
             li.prepend(linkDelete);
-            li.prepend(' | ');
-            li.prepend(linkTop);
 
             $("#puppetList").prepend(li);
         }
