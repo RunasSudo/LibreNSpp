@@ -27,10 +27,16 @@ function run() {
     if (getPageBits().length == 2 && getPageBits()[0] == "page=create_dispatch" && $("input[name=\"dname\"]").val() == "LibreNS++") {
         dispatchEditor();
     }
+
+    //--------------------
+    //Puppet manager
+    if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1] == "x-librenspp=puppets") {
+        managePuppets();
+    }
 }
 
 function getPageBits() {
-    return window.location.href.substring(window.location.href.indexOf("nationstates.net/") + 17).split("/");
+    return window.location.pathname.substring(1).split("/");
 }
 
 run();
