@@ -188,16 +188,18 @@ function run() {
     if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
         //--------------------
         //Load region settings
-        var regionSettings = {};
+        var foundSettings = false;
         for (var i = 0; i < $(".dispatchlist h3 a").length; i++) {
             if ($(".dispatchlist h3 a").get(i).innerText == "LibreNS++") {
                 $.get($(".dispatchlist h3 a").get(i).href, function(data) {
-                    regionSettings = JSON.parse(atob($(data).find("#dispatch p").get(0).innerText));
+                    regionPage(JSON.parse(atob($(data).find("#dispatch p").get(0).innerText)));
                 });
+                foundSettings = true;
                 break;
             }
         }
-        regionPage(regionSettings);
+        if (!foundSettings)
+            regionPage({});
     }
 
     //--------------------
