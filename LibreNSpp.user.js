@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        LibreNS++
 // @namespace   https://github.com/RunasSudo/LibreNSpp
-// @version     0.0a10
+// @version     0.0a11
 // @description Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match       http://*.nationstates.net/*
 // @match       https://*.nationstates.net/*
@@ -13,85 +13,33 @@
 //====================
 //Basic Code
 function run() {
-    var regionSettings = {};
+    allPage();
+    
     //--------------------
     //Region page things
     if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
         //--------------------
         //Load region settings
+        var regionSettings = {};
         for (var i = 0; i < $(".dispatchlist h3 a").length; i++) {
             if ($(".dispatchlist h3 a").get(i).innerText == "LibreNS++") {
                 $.get($(".dispatchlist h3 a").get(i).href, function(data) {
                     regionSettings = JSON.parse(atob($(data).find("#dispatch p").get(0).innerText));
-                    
-                    //Settings dependent stuff
-                    //--------------------
-                    //Custom titles
-                    if (regionSettings.titles) {
-                        if (regionSettings.titles.delegate)
-                            $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
-                        if (regionSettings.titles.founder)
-                            $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
-                    }
-                    
-                    //--------------------
-                    //Embedded IRC
-                    if (regionSettings.irc) {
-                        var ircURL = "https://kiwiirc.com/client/";
-                        if (regionSettings.irc.server) {
-                            ircURL += regionSettings.irc.server + "/";
-                            if (regionSettings.irc.channel)
-                                ircURL += regionSettings.irc.channel;
-                            $('<iframe src="' + ircURL + '" style="border:0; width:100%; height:450px;"></iframe><div class="hzln"></div>').insertBefore($("h2:contains(Today's World Census Report)"));
-                        }
-                    }
                 });
                 break;
             }
         }
-        
-        //--------------------
-        //Infinite RMB scroll
-        var rmb = $(".rmbtable2");
-        rmb.children().each(function(i, entry) {
-            $(entry).linkify();
-            rmb.prepend(entry); //Reverse order so newest are at top.
-        });
-        $(".rmbolder").hide(); //GO AWAI!
-        
-        $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-        
-        //Add scroll detector
-        $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
-        .html("Infinite Scroll!")
-        .insertAfter(rmb.parent());
-        
-        infiniteScroll();
-        
-        //--------------------
-        //Live RMB updates
-        updateRMB();
+        regionPage(regionSettings);
     }
     
     //--------------------
     //Regional settings dispatch editor
     if (getPageBits().length == 2 && getPageBits()[0] == "page=create_dispatch" && $("input[name=\"dname\"]").val() == "LibreNS++") {
-        if ($("textarea[name=\"message\"]").val().split("\n").length >= 3)
-            regionSettings = JSON.parse(atob($("textarea[name=\"message\"]").val().split("\n")[2]));
-        
-        //Create fields
-        $("<tr></tr>").append($('<td class="leftside">Founder Title:</td>')).append($("<td></td>").append($('<input id="settingTitleFounder">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
-        $("<tr></tr>").append($('<td class="leftside">Delegate Title:</td>')).append($("<td></td>").append($('<input id="settingTitleDelegate">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
-        $("<tr></tr>").append($('<td class="leftside">IRC Server:</td>')).append($("<td></td>").append($('<input id="settingIRCServer">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
-        $("<tr></tr>").append($('<td class="leftside">IRC Channel:</td>')).append($("<td></td>").append($('<input id="settingIRCChannel">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
-        
-        //Populate fields
-        $("#settingTitleFounder").val((regionSettings.titles && regionSettings.titles.founder) ? regionSettings.titles.founder : "Founder");
-        $("#settingTitleDelegate").val((regionSettings.titles && regionSettings.titles.delegate) ? regionSettings.titles.delegate : "WA Delegate");
-        $("#settingIRCServer").val((regionSettings.irc && regionSettings.irc.server) ? regionSettings.irc.server : "");
-        $("#settingIRCChannel").val((regionSettings.irc && regionSettings.irc.channel) ? regionSettings.irc.channel : "");
+        dispatchEditor();
     }
-    
+}
+
+function allPage() {
     //--------------------
     //Puppet Switcher
     $("#banner, #nsbanner").prepend(
@@ -124,6 +72,68 @@ function run() {
         populatePuppets();
     });
     populatePuppets();
+}
+
+function regionPage(regionSettings) {
+    //--------------------
+    //Custom titles
+    if (regionSettings.titles) {
+        if (regionSettings.titles.delegate)
+            $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
+        if (regionSettings.titles.founder)
+            $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
+    }
+    
+    //--------------------
+    //Embedded IRC
+    if (regionSettings.irc) {
+        var ircURL = "https://kiwiirc.com/client/";
+        if (regionSettings.irc.server) {
+            ircURL += regionSettings.irc.server + "/";
+            if (regionSettings.irc.channel)
+                ircURL += regionSettings.irc.channel;
+            $('<iframe src="' + ircURL + '" style="border:0; width:100%; height:450px;"></iframe><div class="hzln"></div>').insertBefore($("h2:contains(Today's World Census Report)"));
+        }
+    }
+    
+    //--------------------
+    //Infinite RMB scroll
+    var rmb = $(".rmbtable2");
+    rmb.children().each(function(i, entry) {
+        $(entry).linkify();
+        rmb.prepend(entry); //Reverse order so newest are at top.
+    });
+    $(".rmbolder").hide(); //GO AWAI!
+    
+    $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
+    
+    //Add scroll detector
+    $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
+    .html("Infinite Scroll!")
+    .insertAfter(rmb.parent());
+    
+    infiniteScroll();
+    
+    //--------------------
+    //Live RMB updates
+    updateRMB();
+}
+
+function dispatchEditor() {
+    if ($("textarea[name=\"message\"]").val().split("\n").length >= 3)
+        regionSettings = JSON.parse(atob($("textarea[name=\"message\"]").val().split("\n")[2]));
+    
+    //Create fields
+    $("<tr></tr>").append($('<td class="leftside">Founder Title:</td>')).append($("<td></td>").append($('<input id="settingTitleFounder">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+    $("<tr></tr>").append($('<td class="leftside">Delegate Title:</td>')).append($("<td></td>").append($('<input id="settingTitleDelegate">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+    $("<tr></tr>").append($('<td class="leftside">IRC Server:</td>')).append($("<td></td>").append($('<input id="settingIRCServer">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+    $("<tr></tr>").append($('<td class="leftside">IRC Channel:</td>')).append($("<td></td>").append($('<input id="settingIRCChannel">').keyup(updateDispatchJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+    
+    //Populate fields
+    $("#settingTitleFounder").val((regionSettings.titles && regionSettings.titles.founder) ? regionSettings.titles.founder : "Founder");
+    $("#settingTitleDelegate").val((regionSettings.titles && regionSettings.titles.delegate) ? regionSettings.titles.delegate : "WA Delegate");
+    $("#settingIRCServer").val((regionSettings.irc && regionSettings.irc.server) ? regionSettings.irc.server : "");
+    $("#settingIRCChannel").val((regionSettings.irc && regionSettings.irc.channel) ? regionSettings.irc.channel : "");
 }
 
 //====================
