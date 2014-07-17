@@ -213,9 +213,18 @@ function newspaperPage(dispatch, newspaperData) {
     if (newspaperData.posts) {
         for (var i = 0; i < newspaperData.posts.length; i++) {
             $("#content").append($('<h2></h2>').text(newspaperData.posts[i].title));
-            $("#content").append($('<p></p>').text(newspaperData.posts[i].content));
+            $("#content").append($('<p></p>').html(doBBCode(sanitize(newspaperData.posts[i].content))));
         }
     }
+}
+
+function doBBCode(string) {
+    return string
+        .replace(/\[b\](.*?)\[\/b\]/ig, '<b>$1</b>')
+        .replace(/\[i\](.*?)\[\/i\]/ig, '<i>$1</i>')
+        .replace(/\[u\](.*?)\[\/u\]/ig, '<u>$1</u>')
+        .replace(/\n/g, '<br>')
+        .replace(/&amp;\\;/g, ''); //Regex too hard. Make user suffer instead :P
 }
 function newspaperEditor() {
     var newspaperSettings = {};
