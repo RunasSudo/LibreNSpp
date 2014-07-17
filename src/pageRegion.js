@@ -21,6 +21,16 @@ function regionPage(regionSettings) {
     }
 
     //--------------------
+    //Regional Newspaper
+    if (regionSettings.newspaper) {
+        var dispatch = parseInt(regionSettings.newspaper); //Safe!*
+        $.get("/page=dispatch/id=" + dispatch, function(data) {
+            var newspaper = JSON.parse(atob($(data).find("#dispatch p").get(0).innerText));
+            $('<p><strong>Newspaper:</strong> <a href="/page=blank/x-librenspp=newspaper=' + dispatch + '">' + sanitize(newspaper.title) + '</a></p>').insertBefore($(".wfe"));
+        });
+    }
+
+    //--------------------
     //Infinite RMB scroll
     var rmb = $(".rmbtable2");
     rmb.children().each(function(i, entry) {
