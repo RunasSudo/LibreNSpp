@@ -211,9 +211,10 @@ function newspaperPage(dispatch, newspaperData) {
         $("#content").append('<p><a href="/page=compose_telegram?tgto=' + sanitize(newspaperData.submitTo) + '&x-librenspp=newspaperSubmit=' + dispatch + '">Submit Article</a></p>');
     }
     if (newspaperData.posts) {
-        for (var i = 0; i < newspaperData.posts.length; i++) {
+        for (var i = newspaperData.posts.length - 1; i >= 0; i--) {
             $("#content").append($('<h2></h2>').text(newspaperData.posts[i].title));
             $("#content").append($('<p></p>').html(doBBCode(sanitize(newspaperData.posts[i].content))));
+            $("#content").append('<br>');
         }
     }
 }
@@ -223,27 +224,85 @@ function doBBCode(string) {
         .replace(/\[b\](.*?)\[\/b\]/ig, '<b>$1</b>')
         .replace(/\[i\](.*?)\[\/i\]/ig, '<i>$1</i>')
         .replace(/\[u\](.*?)\[\/u\]/ig, '<u>$1</u>')
+        .replace(/\[img\](.*?)\[\/img\]/ig, '<img src="$1">')
+        .replace(/\[img=([0-9]+)x([0-9]+)\](.*?)\[\/img\]/ig, '<img width="$1" height="$2" src="$3">')
+        .replace(/\[size=([0-9]+)\](.*?)\[\/size\]/ig, '<span style="font-size:$1">$2</span>')
+        .replace(/\[quote=(.*?)\](.*?)\[\/quote\]/ig, '<table><tr><td>$2</td></tr><tr style="text-align:right;"><td>&mdash;$1</td></tr></table>')
         .replace(/\n/g, '<br>')
         .replace(/&amp;\\;/g, ''); //Regex too hard. Make user suffer instead :P
 }
+var newspaperSettings = {};
+
 function newspaperEditor() {
-    var newspaperSettings = {};
     if ($("textarea[name=\"message\"]").val().split("\n").length >= 3)
         newspaperSettings = JSON.parse(atob($("textarea[name=\"message\"]").val().split("\n")[2]));
 
     //Create fields
     $("<tr></tr>").append($('<td class="leftside">Newspaper Title:</td>')).append($("<td></td>").append($('<input id="settingTitle">').keyup(updateNewspaperJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
     $("<tr></tr>").append($('<td class="leftside">Dispatch Owner:</td>')).append($("<td></td>").append($('<input id="settingSubmitTo">').keyup(updateNewspaperJSON))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+    $("<tr></tr>").append($('<td class="leftside">Newspaper Entries:</td>')).append($("<td></td>").append($('<select id="settingNewspaperEntries"><option value="new" selected>-- New Entry --</option></select>').change(entryEditor))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+    $("<tr></tr>").append($('<td class="leftside">Entry Title:</td>')).append($("<td></td>").append($('<input id="entryTitle">'))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+    $("<tr></tr>").append($('<td class="leftside">Entry Content:</td>')).append($("<td></td>").append($('<textarea id="entryContent" rows="18" wrap="soft">'))).insertBefore($("textarea[name=\"message\"]").parent().parent());
+    $("<tr></tr>").append($('<td class="leftside"></td>')).append($("<td></td>").append($('<input type="button" value="Save Entry">').click(updateNewspaperEntry)).append($('<input type="button" value="Delete Entry">').click(deleteNewspaperEntry))).insertBefore($("textarea[name=\"message\"]").parent().parent());
 
     //Populate fields
     $("#settingTitle").val(newspaperSettings.title ? newspaperSettings.title : "");
     $("#settingSubmitTo").val(newspaperSettings.submitTo ? newspaperSettings.submitTo : "");
+    populateEntries();
+
+    entryEditor();
+}
+
+function populateEntries() {
+    if (!newspaperSettings.posts) {
+        newspaperSettings.posts = {};
+    }
+    $("#settingNewspaperEntries").html('<option value="new" selected>-- New Entry --</option>');
+    for (var i = 0; i < newspaperSettings.posts.length; i++) {
+        $("#settingNewspaperEntries").append($('<option value="' + i + '">' + newspaperSettings.posts[i].title + '</option>'));
+    }
+    $("#settingNewspaperEntries").attr("size", newspaperSettings.posts.length + 2);
+}
+
+function entryEditor() {
+    if ($("#settingNewspaperEntries").val() == "new") {
+        $("#entryTitle").val("Untitled Entry");
+        $("#entryContent").val("New Entry");
+    } else {
+        $("#entryTitle").val(newspaperSettings.posts[parseInt($("#settingNewspaperEntries").val())].title);
+        $("#entryContent").val(newspaperSettings.posts[parseInt($("#settingNewspaperEntries").val())].content);
+    }
+}
+
+function updateNewspaperEntry() {
+    if ($("#settingNewspaperEntries").val() == "new") {
+        newspaperSettings.posts.push({
+            "title": $("#entryTitle").val(),
+            "content": $("#entryContent").val()
+        });
+        populateEntries();
+        updateNewspaperJSON();
+    } else {
+        newspaperSettings.posts[parseInt($("#settingNewspaperEntries").val())].title = $("#entryTitle").val();
+        newspaperSettings.posts[parseInt($("#settingNewspaperEntries").val())].content = $("#entryContent").val();
+        populateEntries();
+        updateNewspaperJSON();
+    }
+}
+
+function deleteNewspaperEntry() {
+    if ($("#settingNewspaperEntries").val() != "new") {
+        newspaperSettings.posts.splice(parseInt($("#settingNewspaperEntries").val()), 1);
+        populateEntries();
+        updateNewspaperJSON();
+    }
 }
 
 function updateNewspaperJSON() {
     var json = "{";
     json += '"title":"' + $("#settingTitle").val() + '",';
-    json += '"submitTo":"' + $("#settingSubmitTo").val() + '"';
+    json += '"submitTo":"' + $("#settingSubmitTo").val() + '",';
+    json += '"posts":' + JSON.stringify(newspaperSettings.posts);
     json += "}";
 
     $("textarea[name=\"message\"]").val("This dispatch is automatically generated by LibreNS++ (http://forum.nationstates.net/viewtopic.php?f=15&t=304199). Edit manually at your own risk!\n\n" + btoa(json));
