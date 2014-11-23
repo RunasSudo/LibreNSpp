@@ -805,7 +805,7 @@ function run() {
     //Dispatch editors
     if (getPageBits().length == 2 && getPageBits()[0] == "page=dispatch") {
         var baseEdit = $(".dispatchbyline .smalltext a").attr("href");
-        $(".dispatchbyline .smalltext a").parent().append(' | <a href="' + baseEdit + '/x-librenspp=regionalSettings">as Regional Settings</a> | <a href="' + baseEdit + '/x-librenspp=newspaper">as Newspaper</a>');
+        $(".dispatchbyline .smalltext a").parent().append(' | <a href="' + baseEdit + '/x-librenspp=regionalSettings">as Regional Settings</a>');
     }
     if (getPageBits().length == 3 && getPageBits()[0] == "page=create_dispatch" && getPageBits()[2] == "x-librenspp=regionalSettings") {
         dispatchEditor();
