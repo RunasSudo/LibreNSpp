@@ -23,20 +23,22 @@ function regionPage(regionSettings) {
     //--------------------
     //Infinite RMB scroll
     var rmb = $(".rmbtable2");
-    rmb.children().each(function(i, entry) {
-        $(entry).linkify();
-        rmb.prepend(entry); //Reverse order so newest are at top.
-    });
-    $(".rmbolder").hide(); //GO AWAI!
+    if (rmb.length > 0) {
+        rmb.children().each(function(i, entry) {
+            $(entry).linkify();
+            rmb.prepend(entry); //Reverse order so newest are at top.
+        });
+        $(".rmbolder").hide(); //GO AWAI!
 
-    $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
+        $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
 
-    //Add scroll detector
-    $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
-        .html("Infinite Scroll!")
-        .insertAfter(rmb.parent());
+        //Add scroll detector
+        $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
+            .html("Infinite Scroll!")
+            .insertAfter(rmb.parent());
 
-    infiniteScroll();
+        infiniteScroll();
+    }
 
     //--------------------
     //Live RMB updates
@@ -68,11 +70,13 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
 function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
     $.get("/page=ajax/a=rmb/region=" + window.location.href.substring(window.location.href.indexOf("/region=") + 8) + "/offset=0", function(data) {
         $(data).each(function(i, post) {
-            if ($("div#" + post.id).length == 0) { //It's a new post!
-                $(post).insertBefore(".rmbrow:first").linkify();
-                rmbOffset += 1;
-            } else {
-                $("div#" + post.id).html($(post).html()).linkify();
+            if (post.id) { //Only process it if it's a post.
+                if ($("div#" + post.id).length == 0) { //It's a new post!
+                    $(post).insertBefore(".rmbrow:first").linkify();
+                    rmbOffset += 1;
+                } else {
+                    $("div#" + post.id).html($(post).html()).linkify();
+                }
             }
         });
     });

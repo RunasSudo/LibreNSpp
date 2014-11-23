@@ -1,7 +1,7 @@
 m4_include(header.js)
 
-m4_include(include/jquery.linkify.min.js)
-m4_include(include/json2.js)
+m4_include(../include/jquery.linkify.min.js)
+m4_include(../include/json2.js)
 
 m4_include(pageAll.js)
 m4_include(puppets.js)
