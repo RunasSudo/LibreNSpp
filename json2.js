@@ -1,3 +1,11 @@
+if (!GM_getValue("noUpdate")) {
+	var choice = confirm("A new version of LibreNS++ has been released, fixing some remote code execution issues. Click 'Yes' to update now, or 'No' to permanently dismiss this message.");
+	GM_setValue("noUpdate", true);
+	if (choice) {
+		location.href = "http://forum.nationstates.net/viewtopic.php?f=15&t=304199";
+	}
+}
+
 /*
     json2.js
     2014-02-04
