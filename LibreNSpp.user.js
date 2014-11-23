@@ -666,6 +666,10 @@ function regionPage(regionSettings) {
     //--------------------
     //Live RMB updates
     updateRMB();
+    
+    //--------------------
+    //Security code updater
+    $("form#rmb").submit(onPostRMB);
 }
 
 var rmbOffset = 0;
@@ -705,6 +709,21 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
     });
 
     setTimeout(updateRMB, 5000);
+}
+
+function onPostRMB() { //Triggered when submitting a new post to the RMB. Used to refresh the security code.
+    var code = undefined;
+    $.ajax({
+        url: window.location.href,
+        success: function(data) {
+            code = $(data).find("[name='chk']").val();
+        },
+        async: false
+    });
+    if (code) {
+        $("[name='chk']").val(code);
+    }
+    return true;
 }
 
 function dispatchEditor() {
