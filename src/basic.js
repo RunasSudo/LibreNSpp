@@ -23,15 +23,6 @@ function run() {
     }
 
     //--------------------
-    //Newspaper things
-    if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1].indexOf("x-librenspp=newspaper=") == 0) {
-        var dispatch = parseInt(getPageBits()[1].substring(22));
-        $.get("/page=dispatch/id=" + dispatch, function(data) {
-            newspaperPage(dispatch, JSON.parse(atob($(data).find("#dispatch p").get(0).innerText)));
-        });
-    }
-
-    //--------------------
     //Dispatch editors
     if (getPageBits().length == 2 && getPageBits()[0] == "page=dispatch") {
         var baseEdit = $(".dispatchbyline .smalltext a").attr("href");
@@ -39,9 +30,6 @@ function run() {
     }
     if (getPageBits().length == 3 && getPageBits()[0] == "page=create_dispatch" && getPageBits()[2] == "x-librenspp=regionalSettings") {
         dispatchEditor();
-    }
-    if (getPageBits().length == 3 && getPageBits()[0] == "page=create_dispatch" && getPageBits()[2] == "x-librenspp=newspaper") {
-        newspaperEditor();
     }
 
     //--------------------
