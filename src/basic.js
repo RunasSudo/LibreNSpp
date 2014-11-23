@@ -37,6 +37,12 @@ function run() {
     if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1] == "x-librenspp=puppets") {
         managePuppets();
     }
+    
+    //--------------------
+    //Settings page
+    if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1] == "x-librenspp=settings") {
+        manageSettings();
+    }
 }
 
 function getPageBits() {
