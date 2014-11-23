@@ -23,8 +23,12 @@ function run() {
     }
 
     //--------------------
-    //Regional settings dispatch editor
-    if (getPageBits().length == 2 && getPageBits()[0] == "page=create_dispatch" && $("input[name=\"dname\"]").val() == "LibreNS++") {
+    //Dispatch editors
+    if (getPageBits().length == 2 && getPageBits()[0] == "page=dispatch") {
+        var baseEdit = $(".dispatchbyline .smalltext a").attr("href");
+        $(".dispatchbyline .smalltext a").parent().append(' | <a href="' + baseEdit + '/x-librenspp=regionalSettings">as Regional Settings</a> | <a href="' + baseEdit + '/x-librenspp=newspaper">as Newspaper</a>');
+    }
+    if (getPageBits().length == 3 && getPageBits()[0] == "page=create_dispatch" && getPageBits()[2] == "x-librenspp=regionalSettings") {
         dispatchEditor();
     }
 
@@ -33,10 +37,20 @@ function run() {
     if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1] == "x-librenspp=puppets") {
         managePuppets();
     }
+    
+    //--------------------
+    //Settings page
+    if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1] == "x-librenspp=settings") {
+        manageSettings();
+    }
 }
 
 function getPageBits() {
     return window.location.pathname.substring(1).split("/");
+}
+
+function sanitize(string) {
+    return $('<div></div>').text(string).html();
 }
 
 run();
