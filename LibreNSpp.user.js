@@ -8,6 +8,8 @@
 // @copyright   2014, RunasSudo
 // ==/UserScript==
 
+var version = "0.0a14";
+
 
 /*
  *  Linkify - v1.1.6

@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name        LibreNS++
 // @namespace   https://github.com/RunasSudo/LibreNSpp
-// @version     0.0a14
+// @version     m4_include(../version)
 // @description Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match       http://*.nationstates.net/*
 // @match       https://*.nationstates.net/*
 // @copyright   2014, RunasSudo
 // ==/UserScript==
+
+var version = "m4_include(../version)";
