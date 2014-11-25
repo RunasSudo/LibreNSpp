@@ -775,7 +775,7 @@ function manageSettings() {
     pageContent += '<input type="checkbox" id="liveRMBupdate" checked disabled><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
     pageContent += '<input type="checkbox" id="regionCustomise" checked disabled><label for="regionCustomise">Enable regional customisation.</label><br>';
-    pageContent += '<input type="checkbox" id="regionIRC" checked disabled><label for="regionIRC">Enable regional IRC (requires regional customisation).</label><br>';
+    pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC" checked disabled><label for="regionIRC">Enable regional IRC.</label><br>';
     pageContent += '<br>';
     pageContent += '<h2>NationStates++ Compatibility</h2>';
     pageContent += '<input type="checkbox" id="nsppNewspaper" disabled><label for="nsppNewspaper">Enable NationStates++ newspapers.</label><br>';
