@@ -796,8 +796,8 @@ function manageSettings() {
     var pageContent = '<h1>LibreNS++ Settings</h1>';
     pageContent += '<form id="librensppSettings" onSubmit="return false;">';
     pageContent += '<h2>Updates</h2>';
-    pageContent += '<input type="checkbox" id="autoUpdate" checked disabled><label for="autoUpdate">Check for updates automatically.</label><br>';
-    pageContent += '<input type="button" id="updateNow" value="Check now"> <span id="updateStatus">No new updates. Last checked: never.</span><br>';
+    pageContent += '<input type="checkbox" id="autoUpdate" disabled><label for="autoUpdate">Check for updates automatically.</label><br>';
+    pageContent += '<input type="button" id="updateNow" value="Check now" disabled> <span id="updateStatus">No new updates. Last checked: never.</span><br>';
     pageContent += '<br>';
     pageContent += '<h2>LibreNS++ Features</h2>';
     pageContent += '<input type="checkbox" id="infiniteRMBScroll" checked disabled><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
