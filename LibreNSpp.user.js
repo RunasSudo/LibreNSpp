@@ -512,6 +512,35 @@ if (typeof JSON !== 'object') {
 }());
 
 
+
+var NS_getValue, NS_setValue, NS_deleteValue, NS_listValues;
+
+function LS_getValue(key, def) {
+    return localStorage.getItem(key) || def;
+}
+
+function LS_setValue(key, val) {
+    return localStorage.setItem(key, val);
+}
+
+function LS_deleteValue(key) {
+    return localStorage.removeItem(key);
+}
+
+function LS_listValues() {
+    var list = [];
+    for (var i = 0, len = localStorage.length; i < len; i++) {
+        list.push(localStorage.key(i));
+    }
+    return list;
+}
+
+if (typeof GM_getValue=="function") { if (GM_getValue.toString && GM_getValue.toString().indexOf("not supported") > -1) { NS_getValue = LS_getValue; } else { NS_getValue = GM_getValue; } } else { NS_getValue = LS_getValue; };
+if (typeof GM_setValue=="function") { if (GM_setValue.toString && GM_setValue.toString().indexOf("not supported") > -1) { NS_setValue = LS_setValue; } else { NS_setValue = GM_setValue; } } else { NS_setValue = LS_setValue; };
+if (typeof GM_deleteValue=="function") { if (GM_deleteValue.toString && GM_deleteValue.toString().indexOf("not supported") > -1) { NS_deleteValue = LS_deleteValue; } else { NS_deleteValue = GM_deleteValue; } } else { NS_deleteValue = LS_deleteValue; };
+if (typeof GM_listValues=="function") { if (GM_listValues.toString && GM_listValues.toString().indexOf("not supported") > -1) { NS_listValues = LS_listValues; } else { NS_listValues = GM_listValues; } } else { NS_listValues = LS_listValues; };
+
+
 function allPage() {
     //--------------------
     //Puppet Switcher
@@ -549,7 +578,7 @@ function managePuppets() {
 
     $("#puppetAdd").click(function() {
         if ($("#puppetUsername").val().length > 0 && $("#puppetPassword").val().length > 0) {
-            GM_setValue("puppet_p_" + $("#puppetUsername").val().toLowerCase().replace(" ", "_"), btoa($("#puppetUsername").val()) + ":" + btoa($("#puppetPassword").val()));
+            NS_setValue("puppet_p_" + $("#puppetUsername").val().toLowerCase().replace(" ", "_"), btoa($("#puppetUsername").val()) + ":" + btoa($("#puppetPassword").val()));
             populatePuppets();
             populatePuppetManager();
         }
@@ -561,10 +590,10 @@ function managePuppets() {
 function populatePuppets() {
     $("#listPuppets").html("<br>");
 
-    var allSettings = GM_listValues();
+    var allSettings = NS_listValues();
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
-            var value = GM_getValue(allSettings[i]);
+            var value = NS_getValue(allSettings[i]);
             var link = $('<a href="javascript:void(0);">' + atob(value.substring(0, value.indexOf(":"))) + '</a>');
 
             link.click(makeSwitchPuppetHandler(value));
@@ -577,10 +606,10 @@ function populatePuppets() {
 function populatePuppetManager() {
     $("#puppetList").html("");
 
-    var allSettings = GM_listValues();
+    var allSettings = NS_listValues();
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
-            var value = GM_getValue(allSettings[i]);
+            var value = NS_getValue(allSettings[i]);
 
             var linkDelete = $('<a href="javascript:void(0);">Delete</a>');
             linkDelete.click(makeDeletePuppetHandler(allSettings[i]));
@@ -607,9 +636,9 @@ function makeSwitchPuppetHandler(value) {
 
 function makeTopPuppetHandler(name) {
     return function() {
-        var value = GM_getValue(name);
-        GM_deleteValue(name);
-        GM_setValue(name, value);
+        var value = NS_getValue(name);
+        NS_deleteValue(name);
+        NS_setValue(name, value);
         populatePuppets();
         populatePuppetManager();
     };
@@ -617,7 +646,7 @@ function makeTopPuppetHandler(name) {
 
 function makeDeletePuppetHandler(name) {
     return function() {
-        GM_deleteValue(name);
+        NS_deleteValue(name);
         populatePuppets();
         populatePuppetManager();
     };
