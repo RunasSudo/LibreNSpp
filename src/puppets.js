@@ -25,7 +25,7 @@ function managePuppets() {
 
     $("#puppetAdd").click(function() {
         if ($("#puppetUsername").val().length > 0 && $("#puppetPassword").val().length > 0) {
-            GM_setValue("puppet_p_" + $("#puppetUsername").val().toLowerCase().replace(" ", "_"), btoa($("#puppetUsername").val()) + ":" + btoa($("#puppetPassword").val()));
+            NS_setValue("puppet_p_" + $("#puppetUsername").val().toLowerCase().replace(" ", "_"), btoa($("#puppetUsername").val()) + ":" + btoa($("#puppetPassword").val()));
             populatePuppets();
             populatePuppetManager();
         }
@@ -37,10 +37,10 @@ function managePuppets() {
 function populatePuppets() {
     $("#listPuppets").html("<br>");
 
-    var allSettings = GM_listValues();
+    var allSettings = NS_listValues();
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
-            var value = GM_getValue(allSettings[i]);
+            var value = NS_getValue(allSettings[i]);
             var link = $('<a href="javascript:void(0);">' + atob(value.substring(0, value.indexOf(":"))) + '</a>');
 
             link.click(makeSwitchPuppetHandler(value));
@@ -53,10 +53,10 @@ function populatePuppets() {
 function populatePuppetManager() {
     $("#puppetList").html("");
 
-    var allSettings = GM_listValues();
+    var allSettings = NS_listValues();
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
-            var value = GM_getValue(allSettings[i]);
+            var value = NS_getValue(allSettings[i]);
 
             var linkDelete = $('<a href="javascript:void(0);">Delete</a>');
             linkDelete.click(makeDeletePuppetHandler(allSettings[i]));
@@ -83,9 +83,9 @@ function makeSwitchPuppetHandler(value) {
 
 function makeTopPuppetHandler(name) {
     return function() {
-        var value = GM_getValue(name);
-        GM_deleteValue(name);
-        GM_setValue(name, value);
+        var value = NS_getValue(name);
+        NS_deleteValue(name);
+        NS_setValue(name, value);
         populatePuppets();
         populatePuppetManager();
     };
@@ -93,7 +93,7 @@ function makeTopPuppetHandler(name) {
 
 function makeDeletePuppetHandler(name) {
     return function() {
-        GM_deleteValue(name);
+        NS_deleteValue(name);
         populatePuppets();
         populatePuppetManager();
     };
