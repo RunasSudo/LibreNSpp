@@ -42,20 +42,9 @@
 		</activity>
 
 		<meta-data android:name="android.app.default_searchable" android:value=".BrowseActivity" />
-
-
-		<!-- we provide our own email picker because Contacts.apk doesnt support it yet -->
-		<activity android:name="com.android.contacts.ContactsListActivity" android:label="@string/app_email">
-			<intent-filter>
-				<action android:name="android.intent.action.GET_CONTENT" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<data android:mimeType="vnd.android.cursor.item/email" />
-			</intent-filter>
-		</activity>
         
 	</application>
 
-	<uses-permission android:name="android.permission.READ_CONTACTS" />
 	<uses-permission android:name="android.permission.INTERNET" />
 
 </manifest> 
