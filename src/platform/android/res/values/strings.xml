@@ -17,13 +17,13 @@
 -->
 
 <resources>
-	<string name="app_name">OilCan</string>
-	<string name="app_desc">Dynamically change any website using scripts, similar to Greasemonkey</string>
+	<string name="app_name">LibreNS++</string>
+	<string name="app_desc">A free, secure NationStates++ alternative.</string>
 	
 	<string name="app_scripts">Scripts list</string>
 	<string name="app_email">Pick E-mail address</string>
 	
-	<string name="search_label">OilCan</string>
+	<string name="search_label">LibreNS++</string>
 	<string name="search_hint">Type Web address</string>
 	<string name="search_button_text">Go</string>
 	
@@ -35,7 +35,7 @@
 
 	<string name="browse_nointent">Couldn\'t find activity to handle the requested intent</string>
 	
-	<string name="browse_title">OilCan: %s</string>
+	<string name="browse_title">LibreNS++: %s</string>
 	
 	<string name="install_title">Found userscript</string>
 	<string name="install_message">This looks like a userscript, would you like to install it?  You should only install scripts from trusted sources.</string>
