@@ -47,6 +47,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -88,11 +89,8 @@ public class BrowserActivity extends Activity {
 		settings.setSaveFormData(false);
 		settings.setJavaScriptEnabled(true);
 		settings.setSupportZoom(true);
+		settings.setBuiltInZoomControls(false);
 		settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-		
-		FrameLayout zoomholder = (FrameLayout)this.findViewById(R.id.browse_zoom);
-		zoomholder.addView(webview.getZoomControls());
-		webview.getZoomControls().setVisibility(View.GONE);
 		
 		webview.setWebViewClient(new OilCanClient());
 		webview.setWebChromeClient(new OilCanChrome());
@@ -288,6 +286,7 @@ public class BrowserActivity extends Activity {
 		 * Launch the intent described by JSON. Will only launch if magic key
 		 * matches for this browser instance.
 		 */
+		@JavascriptInterface
 		public void startActivity(String trykey, String json) {
 			if(magickey != Long.parseLong(trykey)) {
 				Log.e(TAG, "Magic key from caller doesn't match, so we might have a malicious caller.");
@@ -311,6 +310,7 @@ public class BrowserActivity extends Activity {
 		 * returned. Will package and return the result as a JSON string. Will
 		 * only launch if the magic key matches for this browser instance.
 		 */
+		@JavascriptInterface
 		public String startActivityForResult(String trykey, String json) {
 			if(magickey != Long.parseLong(trykey)) {
 				Log.e(TAG, "Magic key from caller doesn't match, so we might have a malicous caller.");
