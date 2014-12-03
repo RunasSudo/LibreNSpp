@@ -11,7 +11,7 @@ function regionPage(regionSettings) {
     //--------------------
     //Embedded IRC
     if (regionSettings.irc) {
-        var ircURL = "https://kiwiirc.com/client/";
+        var ircURL = "https:/" + "/kiwiirc.com/client/";
         if (regionSettings.irc.server) {
             ircURL += regionSettings.irc.server + "/";
             if (regionSettings.irc.channel)

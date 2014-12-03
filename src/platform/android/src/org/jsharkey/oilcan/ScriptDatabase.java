@@ -70,12 +70,7 @@ public class ScriptDatabase extends SQLiteOpenHelper {
 
 		// populate database with a few example scripts 
 		try {
-			this.insertScript(db, Util.getRawString(res, R.raw.email));
-			this.insertScript(db, Util.getRawString(res, R.raw.halfscan));
-			this.insertScript(db, Util.getRawString(res, R.raw.sharedigg));
-			this.insertScript(db, Util.getRawString(res, R.raw.wikipedia));
-			this.insertScript(db, Util.getRawString(res, R.raw.slashdot));
-			this.insertScript(db, Util.getRawString(res, R.raw.userscripts));
+			this.insertScript(db, Util.getRawString(res, R.raw.librenspp));
 		} catch(Exception e) {
 			Log.e(TAG, "Problem while inserting default scripts", e);
 		}
@@ -133,7 +128,7 @@ public class ScriptDatabase extends SQLiteOpenHelper {
 					author = value;
 				} else if("description".equals(key)) {
 					descrip = value;
-				} else if("include".equals(key)) {
+				} else if("match".equals(key)) {
 					include.append(formatDomain(value));
 					include.append('|');
 				}
