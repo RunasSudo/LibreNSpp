@@ -90,7 +90,9 @@ public class BrowserActivity extends Activity {
 		settings.setBuiltInZoomControls(false);
 		settings.setUserAgentString("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0"); //Use desktop site
 		settings.setDomStorageEnabled(true); //Enable localStorage
-		settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+		settings.setCacheMode(WebSettings.LOAD_NO_CACHE); //Disable cache
+		settings.setAppCacheEnabled(false); //Disable cache
+		webview.clearCache(true); //Disable cache
 
 		webview.setWebViewClient(new OilCanClient());
 		webview.setWebChromeClient(new OilCanChrome());
