@@ -53,4 +53,6 @@ function sanitize(string) {
     return $('<div></div>').text(string).html();
 }
 
-run();
+$(function(){
+	run();
+});

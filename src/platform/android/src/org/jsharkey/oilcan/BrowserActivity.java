@@ -88,7 +88,8 @@ public class BrowserActivity extends Activity {
 		settings.setJavaScriptEnabled(true);
 		settings.setSupportZoom(true);
 		settings.setBuiltInZoomControls(false);
-		settings.setUserAgentString("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0");
+		settings.setUserAgentString("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0"); //Use desktop site
+		settings.setDomStorageEnabled(true); //Enable localStorage
 		settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
 		webview.setWebViewClient(new OilCanClient());
