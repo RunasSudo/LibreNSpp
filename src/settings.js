@@ -5,6 +5,12 @@ function setupSettings() {
     );
 }
 
+function loadSettings() {
+	settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true);
+	
+	return settings;
+}
+
 function manageSettings() {
     var pageContent = '<h1>LibreNS++ Settings</h1>';
     pageContent += '<form id="librensppSettings" onSubmit="return false;">';
@@ -20,8 +26,15 @@ function manageSettings() {
     pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC" checked disabled><label for="regionIRC">Enable regional IRC.</label><br>';
     pageContent += '<br>';
     pageContent += '<h2>NationStates++ Compatibility</h2>';
-    pageContent += '<input type="checkbox" id="nsppNewspaper" disabled><label for="nsppNewspaper">Enable NationStates++ newspapers.</label><br>';
-    pageContent += '<input type="checkbox" id="nsppIRC" disabled><label for="nsppIRC">Enable NationStates++ IRC.</label><br>';
+    pageContent += '<input type="checkbox" id="nsppTitles"><label for="nsppTitles">Enable NationStates++ regional titles.</label><br>';
+    pageContent += '<input type="checkbox" id="nsppNewspaper" disabled><label for="nsppNewspaper">Enable NationStates++ regional newspapers.</label><br>';
+    pageContent += '<input type="checkbox" id="nsppIRC" disabled><label for="nsppIRC">Enable NationStates++ regional IRC.</label><br>';
     pageContent += '</form>';
     $("#content").html(pageContent);
+    
+    $("#nsppTitles").prop("checked", settings["nsppTitles"]);
+    
+    $("#librensppSettings input[type='checkbox']").change(function() {
+		NS_setValue("setting_" + this.id, this.checked);
+	});
 }

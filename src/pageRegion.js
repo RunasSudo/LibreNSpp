@@ -6,7 +6,17 @@ function regionPage(regionSettings) {
             $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
-    }
+    } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
+		$.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
+			//nsppTitles is already a JSON object.
+			if (nsppTitles) {
+				if (nsppTitles.delegate_title)
+					$("strong:contains(WA Delegate:)").text(nsppTitles.delegate_title + ":");
+				if (nsppTitles.founder_title)
+					$("strong:contains(Founder:)").text(nsppTitles.founder_title + ":");
+			}
+		});
+	}
 
     //--------------------
     //Embedded IRC
@@ -56,7 +66,7 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
         //Load new RMB messages.
         $("#infiniteScroll").html("Loading&hellip;");
         rmbOffset += 10;
-        $.get("/page=ajax/a=rmb/region=" + window.location.href.substring(window.location.href.indexOf("/region=") + 8) + "/offset=" + rmbOffset, function(data) {
+        $.get("/page=ajax/a=rmb/region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8) + "/offset=" + rmbOffset, function(data) {
             if (data.length > 1) {
                 $($(data).get().reverse()).insertAfter(".rmbrow:last").linkify();
                 $("#infiniteScroll").html("Infinite Scroll!");
@@ -72,7 +82,7 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
 }
 
 function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
-    $.get("/page=ajax/a=rmb/region=" + window.location.href.substring(window.location.href.indexOf("/region=") + 8) + "/offset=0", function(data) {
+    $.get("/page=ajax/a=rmb/region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8) + "/offset=0", function(data) {
         $(data).each(function(i, post) {
             if (post.id) { //Only process it if it's a post.
                 if ($("div#" + post.id).length == 0) { //It's a new post!
@@ -91,7 +101,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
 function onPostRMB() { //Triggered when submitting a new post to the RMB. Used to refresh the security code.
     var code = undefined;
     $.ajax({
-        url: window.location.href,
+        url: window.location,
         success: function(data) {
             code = $(data).find("[name='chk']").val();
         },
