@@ -13,6 +13,7 @@ function loadSettings() {
 
 function manageSettings() {
     var pageContent = '<h1>LibreNS++ Settings</h1>';
+    pageContent += '<p style="font-size: 0.9em;">LibreNS++ version ' + version + '. <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">Forum</a>, <a href="https://github.com/RunasSudo/LibreNSpp">GitHub</a>, <a href="https://www.nationstates.net/nation=south_jarvis">South Jarvis (creator)</a>.</p>';
     pageContent += '<form id="librensppSettings" onSubmit="return false;">';
     pageContent += '<h2>Updates</h2>';
     pageContent += '<input type="checkbox" id="autoUpdate" disabled><label for="autoUpdate">Check for updates automatically.</label><br>';
