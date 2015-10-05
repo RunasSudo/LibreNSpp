@@ -1,8 +1,8 @@
 var settings = [];
 
 function allPage() {
-	loadSettings();
-	
+    loadSettings();
+    
     //--------------------
     //Puppet Switcher
     setupPuppets();
