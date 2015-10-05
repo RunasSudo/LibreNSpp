@@ -54,5 +54,5 @@ function sanitize(string) {
 }
 
 $(function(){
-	run();
+    run();
 });

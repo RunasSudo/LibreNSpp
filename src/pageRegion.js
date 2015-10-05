@@ -7,16 +7,16 @@ function regionPage(regionSettings) {
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
     } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
-		$.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
-			//nsppTitles is already a JSON object.
-			if (nsppTitles) {
-				if (nsppTitles.delegate_title)
-					$("strong:contains(WA Delegate:)").text(nsppTitles.delegate_title + ":");
-				if (nsppTitles.founder_title)
-					$("strong:contains(Founder:)").text(nsppTitles.founder_title + ":");
-			}
-		});
-	}
+        $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
+            //nsppTitles is already a JSON object.
+            if (nsppTitles) {
+                if (nsppTitles.delegate_title)
+                    $("strong:contains(WA Delegate:)").text(nsppTitles.delegate_title + ":");
+                if (nsppTitles.founder_title)
+                    $("strong:contains(Founder:)").text(nsppTitles.founder_title + ":");
+            }
+        });
+    }
 
     //--------------------
     //Embedded IRC

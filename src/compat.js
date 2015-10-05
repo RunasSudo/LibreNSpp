@@ -1,4 +1,4 @@
-m4_define(`replaceFunction', `if (typeof $2=="function") { if ($2.toString && $2.toString().indexOf("not supported") > -1) { $1 = $3; } else { $1 = $2; } } else { $1 = $3; }')
+m4_define(`replaceFunction', `if (typeof $2=="function") { if ($2.toString && $2.toString().indexOf("not supported") > -1) { $1 = $3; console.log("Using $3"); } else { $1 = $2; console.log("Using $2"); } } else { $1 = $3; console.log("Using $3"); }')
 
 var NS_getValue, NS_setValue, NS_deleteValue, NS_listValues;
 
