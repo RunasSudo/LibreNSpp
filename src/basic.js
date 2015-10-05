@@ -13,9 +13,9 @@ function run() {
         //Load region settings
         var foundSettings = false;
         for (var i = 0; i < $(".dispatchlist h3 a").length; i++) {
-            if ($(".dispatchlist h3 a").get(i).innerText == "LibreNS++") {
+            if ($(".dispatchlist h3 a").get(i).innerHTML == "LibreNS++") {
                 $.get($(".dispatchlist h3 a").get(i).href, function(data) {
-                    regionPage(JSON.parse(atob($(data).find("#dispatch p").get(0).innerText)));
+                    regionPage(JSON.parse(atob($(data).find("#dispatch p").get(0).innerHTML)));
                 });
                 foundSettings = true;
                 break;
