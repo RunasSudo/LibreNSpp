@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name        LibreNS++
 // @namespace   https://github.com/RunasSudo/LibreNSpp
-// @version     0.0a16
+// @version     0.0a17
 // @description Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match       http://*.nationstates.net/*
 // @match       https://*.nationstates.net/*
 // @copyright   2014, RunasSudo
 // ==/UserScript==
 
-var version = "0.0a16";
+var version = "0.0a17";
 
 
 /*! jQuery v2.1.1 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */
@@ -375,9 +375,9 @@ function run() {
         //Load region settings
         var foundSettings = false;
         for (var i = 0; i < $(".dispatchlist h3 a").length; i++) {
-            if ($(".dispatchlist h3 a").get(i).innerText == "LibreNS++") {
+            if ($(".dispatchlist h3 a").get(i).innerHTML == "LibreNS++") {
                 $.get($(".dispatchlist h3 a").get(i).href, function(data) {
-                    regionPage(JSON.parse(atob($(data).find("#dispatch p").get(0).innerText)));
+                    regionPage(JSON.parse(atob($(data).find("#dispatch p").get(0).innerHTML)));
                 });
                 foundSettings = true;
                 break;
