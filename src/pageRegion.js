@@ -90,6 +90,9 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
 }
 
 function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
+    if (!settings["liveRMBupdate"]) {
+        return;
+    }
     $.get("/page=ajax/a=rmb/region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8) + "/offset=0", function(data) {
         $(data).each(function(i, post) {
             if (post.id) { //Only process it if it's a post.
