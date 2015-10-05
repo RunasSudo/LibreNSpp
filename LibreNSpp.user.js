@@ -187,6 +187,7 @@ function setupSettings() {
 }
 
 function loadSettings() {
+    settings["infiniteRMBScroll"] = NS_getValue("setting_infiniteRMBScroll", true) == "true";
     settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
     
     return settings;
@@ -201,7 +202,7 @@ function manageSettings() {
     pageContent += '<input type="button" id="updateNow" value="Check now" disabled> <span id="updateStatus">No new updates. Last checked: never.</span><br>';
     pageContent += '<br>';
     pageContent += '<h2>LibreNS++ Features</h2>';
-    pageContent += '<input type="checkbox" id="infiniteRMBScroll" checked disabled><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
+    pageContent += '<input type="checkbox" id="infiniteRMBScroll"><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
     pageContent += '<input type="checkbox" id="liveRMBupdate" checked disabled><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
     pageContent += '<input type="checkbox" id="regionCustomise" checked disabled><label for="regionCustomise">Enable regional customisation.</label><br>';
@@ -214,10 +215,12 @@ function manageSettings() {
     pageContent += '</form>';
     $("#content").html(pageContent);
     
+    $("#infiniteRMBScroll").prop("checked", settings["infiniteRMBScroll"]);
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
     
     $("#librensppSettings input[type='checkbox']").change(function() {
         NS_setValue("setting_" + this.id, this.checked);
+        // note for future: if any settings that affect the settings page are added, they won't take effect until reload (probably for the better)
     });
 }
 
@@ -264,14 +267,19 @@ function regionPage(regionSettings) {
         $(".rmbolder").hide(); //GO AWAI!
 
         $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-
+        
         //Add scroll detector
         $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
             .html("Infinite Scroll!")
             .insertAfter(rmb.parent());
-
-        infiniteScroll();
+    
+        if (settings["infiniteRMBScroll"]) {
+            infiniteScroll();
+        } else {
+            $("#infiniteScroll").html("Infinite Scroll disabled in settings.")
+        }
     }
+    
 
     //--------------------
     //Live RMB updates
@@ -285,6 +293,9 @@ function regionPage(regionSettings) {
 var rmbOffset = 0;
 
 function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling.
+    if (!settings["infiniteRMBScroll"]) {
+        return;
+    }
     if ($("#infiniteScroll").offset().top <= $(window).scrollTop() + $(window).height()) { //Check if #infiniteScroll is in view.
         //Load new RMB messages.
         $("#infiniteScroll").html("Loading&hellip;");

@@ -6,6 +6,7 @@ function setupSettings() {
 }
 
 function loadSettings() {
+    settings["infiniteRMBScroll"] = NS_getValue("setting_infiniteRMBScroll", true) == "true";
     settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
     
     return settings;
@@ -20,7 +21,7 @@ function manageSettings() {
     pageContent += '<input type="button" id="updateNow" value="Check now" disabled> <span id="updateStatus">No new updates. Last checked: never.</span><br>';
     pageContent += '<br>';
     pageContent += '<h2>LibreNS++ Features</h2>';
-    pageContent += '<input type="checkbox" id="infiniteRMBScroll" checked disabled><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
+    pageContent += '<input type="checkbox" id="infiniteRMBScroll"><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
     pageContent += '<input type="checkbox" id="liveRMBupdate" checked disabled><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
     pageContent += '<input type="checkbox" id="regionCustomise" checked disabled><label for="regionCustomise">Enable regional customisation.</label><br>';
@@ -33,9 +34,11 @@ function manageSettings() {
     pageContent += '</form>';
     $("#content").html(pageContent);
     
+    $("#infiniteRMBScroll").prop("checked", settings["infiniteRMBScroll"]);
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
     
     $("#librensppSettings input[type='checkbox']").change(function() {
         NS_setValue("setting_" + this.id, this.checked);
+        // note for future: if any settings that affect the settings page are added, they won't take effect until reload (probably for the better)
     });
 }

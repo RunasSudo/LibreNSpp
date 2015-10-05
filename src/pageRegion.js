@@ -41,14 +41,19 @@ function regionPage(regionSettings) {
         $(".rmbolder").hide(); //GO AWAI!
 
         $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-
+        
         //Add scroll detector
         $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
             .html("Infinite Scroll!")
             .insertAfter(rmb.parent());
-
-        infiniteScroll();
+    
+        if (settings["infiniteRMBScroll"]) {
+            infiniteScroll();
+        } else {
+            $("#infiniteScroll").html("Infinite Scroll disabled in settings.")
+        }
     }
+    
 
     //--------------------
     //Live RMB updates
@@ -62,6 +67,9 @@ function regionPage(regionSettings) {
 var rmbOffset = 0;
 
 function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling.
+    if (!settings["infiniteRMBScroll"]) {
+        return;
+    }
     if ($("#infiniteScroll").offset().top <= $(window).scrollTop() + $(window).height()) { //Check if #infiniteScroll is in view.
         //Load new RMB messages.
         $("#infiniteScroll").html("Loading&hellip;");
