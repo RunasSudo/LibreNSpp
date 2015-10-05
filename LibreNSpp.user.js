@@ -189,6 +189,7 @@ function setupSettings() {
 function loadSettings() {
     settings["infiniteRMBScroll"] = NS_getValue("setting_infiniteRMBScroll", true) == "true";
     settings["liveRMBupdate"] = NS_getValue("setting_liveRMBupdate", true) == "true";
+    settings["regionCustomise"] = NS_getValue("setting_regionCustomise", true) == "true";
     settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
     
     return settings;
@@ -206,7 +207,7 @@ function manageSettings() {
     pageContent += '<input type="checkbox" id="infiniteRMBScroll"><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
     pageContent += '<input type="checkbox" id="liveRMBupdate"><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
-    pageContent += '<input type="checkbox" id="regionCustomise" checked disabled><label for="regionCustomise">Enable regional customisation.</label><br>';
+    pageContent += '<input type="checkbox" id="regionCustomise"><label for="regionCustomise">Enable regional customisation.</label><br>';
     pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC" checked disabled><label for="regionIRC">Enable regional IRC.</label><br>';
     pageContent += '<br>';
     pageContent += '<h2>NationStates++ Compatibility</h2>';
@@ -218,6 +219,7 @@ function manageSettings() {
     
     $("#infiniteRMBScroll").prop("checked", settings["infiniteRMBScroll"]);
     $("#liveRMBupdate").prop("checked", settings["liveRMBupdate"]);
+    $("#regionCustomise").prop("checked", settings["regionCustomise"]);
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
     
     $("#librensppSettings input[type='checkbox']").change(function() {
@@ -229,12 +231,12 @@ function manageSettings() {
 function regionPage(regionSettings) {
     //--------------------
     //Custom titles
-    if (regionSettings.titles) {
+    if (regionSettings.titles && settings["regionCustomise"]) {
         if (regionSettings.titles.delegate)
             $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
-    } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
+    } else if (settings.nsppTitles && settings["regionCustomise"]) { //Only load if LibreNS++ settings not present.
         $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
             //nsppTitles is already a JSON object.
             if (nsppTitles) {
@@ -248,7 +250,7 @@ function regionPage(regionSettings) {
 
     //--------------------
     //Embedded IRC
-    if (regionSettings.irc) {
+    if (regionSettings.irc && settings["regionCustomise"]) {
         var ircURL = "https:/" + "/kiwiirc.com/client/";
         if (regionSettings.irc.server) {
             ircURL += regionSettings.irc.server + "/";
@@ -388,6 +390,9 @@ function run() {
     //--------------------
     //Region page things
     if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
+        if (!settings["regionCustomise"]) {
+            regionPage({});
+        }
         //--------------------
         //Load region settings
         var foundSettings = false;

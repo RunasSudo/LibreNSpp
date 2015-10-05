@@ -1,12 +1,12 @@
 function regionPage(regionSettings) {
     //--------------------
     //Custom titles
-    if (regionSettings.titles) {
+    if (regionSettings.titles && settings["regionCustomise"]) {
         if (regionSettings.titles.delegate)
             $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
-    } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
+    } else if (settings.nsppTitles && settings["regionCustomise"]) { //Only load if LibreNS++ settings not present.
         $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
             //nsppTitles is already a JSON object.
             if (nsppTitles) {
@@ -20,7 +20,7 @@ function regionPage(regionSettings) {
 
     //--------------------
     //Embedded IRC
-    if (regionSettings.irc) {
+    if (regionSettings.irc && settings["regionCustomise"]) {
         var ircURL = "https:/" + "/kiwiirc.com/client/";
         if (regionSettings.irc.server) {
             ircURL += regionSettings.irc.server + "/";

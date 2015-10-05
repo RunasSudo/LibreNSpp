@@ -6,6 +6,9 @@ function run() {
     //--------------------
     //Region page things
     if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
+        if (!settings["regionCustomise"]) {
+            regionPage({});
+        }
         //--------------------
         //Load region settings
         var foundSettings = false;
