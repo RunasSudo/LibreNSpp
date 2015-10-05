@@ -6,9 +6,9 @@ function setupSettings() {
 }
 
 function loadSettings() {
-	settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true);
-	
-	return settings;
+    settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
+    
+    return settings;
 }
 
 function manageSettings() {
@@ -35,6 +35,6 @@ function manageSettings() {
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
     
     $("#librensppSettings input[type='checkbox']").change(function() {
-		NS_setValue("setting_" + this.id, this.checked);
-	});
+        NS_setValue("setting_" + this.id, this.checked);
+    });
 }

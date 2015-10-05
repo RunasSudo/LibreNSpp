@@ -58,17 +58,17 @@ function LS_listValues() {
     return list;
 }
 
-if (typeof GM_getValue=="function") { if (GM_getValue.toString && GM_getValue.toString().indexOf("not supported") > -1) { NS_getValue = LS_getValue; } else { NS_getValue = GM_getValue; } } else { NS_getValue = LS_getValue; };
-if (typeof GM_setValue=="function") { if (GM_setValue.toString && GM_setValue.toString().indexOf("not supported") > -1) { NS_setValue = LS_setValue; } else { NS_setValue = GM_setValue; } } else { NS_setValue = LS_setValue; };
-if (typeof GM_deleteValue=="function") { if (GM_deleteValue.toString && GM_deleteValue.toString().indexOf("not supported") > -1) { NS_deleteValue = LS_deleteValue; } else { NS_deleteValue = GM_deleteValue; } } else { NS_deleteValue = LS_deleteValue; };
-if (typeof GM_listValues=="function") { if (GM_listValues.toString && GM_listValues.toString().indexOf("not supported") > -1) { NS_listValues = LS_listValues; } else { NS_listValues = GM_listValues; } } else { NS_listValues = LS_listValues; };
+if (typeof GM_getValue=="function") { if (GM_getValue.toString && GM_getValue.toString().indexOf("not supported") > -1) { NS_getValue = LS_getValue; console.log("Using LS_getValue"); } else { NS_getValue = GM_getValue; console.log("Using GM_getValue"); } } else { NS_getValue = LS_getValue; console.log("Using LS_getValue"); };
+if (typeof GM_setValue=="function") { if (GM_setValue.toString && GM_setValue.toString().indexOf("not supported") > -1) { NS_setValue = LS_setValue; console.log("Using LS_setValue"); } else { NS_setValue = GM_setValue; console.log("Using GM_setValue"); } } else { NS_setValue = LS_setValue; console.log("Using LS_setValue"); };
+if (typeof GM_deleteValue=="function") { if (GM_deleteValue.toString && GM_deleteValue.toString().indexOf("not supported") > -1) { NS_deleteValue = LS_deleteValue; console.log("Using LS_deleteValue"); } else { NS_deleteValue = GM_deleteValue; console.log("Using GM_deleteValue"); } } else { NS_deleteValue = LS_deleteValue; console.log("Using LS_deleteValue"); };
+if (typeof GM_listValues=="function") { if (GM_listValues.toString && GM_listValues.toString().indexOf("not supported") > -1) { NS_listValues = LS_listValues; console.log("Using LS_listValues"); } else { NS_listValues = GM_listValues; console.log("Using GM_listValues"); } } else { NS_listValues = LS_listValues; console.log("Using LS_listValues"); };
 
 
 var settings = [];
 
 function allPage() {
-	loadSettings();
-	
+    loadSettings();
+    
     //--------------------
     //Puppet Switcher
     setupPuppets();
@@ -187,9 +187,9 @@ function setupSettings() {
 }
 
 function loadSettings() {
-	settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true);
-	
-	return settings;
+    settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
+    
+    return settings;
 }
 
 function manageSettings() {
@@ -216,8 +216,8 @@ function manageSettings() {
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
     
     $("#librensppSettings input[type='checkbox']").change(function() {
-		NS_setValue("setting_" + this.id, this.checked);
-	});
+        NS_setValue("setting_" + this.id, this.checked);
+    });
 }
 
 function regionPage(regionSettings) {
@@ -229,16 +229,16 @@ function regionPage(regionSettings) {
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
     } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
-		$.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
-			//nsppTitles is already a JSON object.
-			if (nsppTitles) {
-				if (nsppTitles.delegate_title)
-					$("strong:contains(WA Delegate:)").text(nsppTitles.delegate_title + ":");
-				if (nsppTitles.founder_title)
-					$("strong:contains(Founder:)").text(nsppTitles.founder_title + ":");
-			}
-		});
-	}
+        $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
+            //nsppTitles is already a JSON object.
+            if (nsppTitles) {
+                if (nsppTitles.delegate_title)
+                    $("strong:contains(WA Delegate:)").text(nsppTitles.delegate_title + ":");
+                if (nsppTitles.founder_title)
+                    $("strong:contains(Founder:)").text(nsppTitles.founder_title + ":");
+            }
+        });
+    }
 
     //--------------------
     //Embedded IRC
@@ -419,6 +419,6 @@ function sanitize(string) {
 }
 
 $(function(){
-	run();
+    run();
 });
 
