@@ -7,10 +7,10 @@ function setupPuppets() {
         $("#banner, #nsbanner").append(
             $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 21px; right: 145px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
         );
-    } else { // Rift
+    } else {
         $("#banner .belspacer:not(.belspacermain)").after(
             $('<div class="bel" id="puppetsbox"></div>')
-                .html('<div class="belcontent"><a class="bellink" id="puppetsbox_button" href="javascript:void(0);" style=""><i class="icon-town-hall"></i>PUPPETS</a></div>')
+            .html('<div class="belcontent"><a class="bellink" id="puppetsbox_button" href="javascript:void(0);"><i class="icon-town-hall"></i>PUPPETS</a></div>')
         );
         $("#banner .belspacer:not(.belspacermain)").append(
             $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,1); position: absolute; top: 55px; right: 98px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
