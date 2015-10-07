@@ -10,4 +10,10 @@ function allPage() {
     //--------------------
     //Settings Link
     setupSettings();
+    
+    //--------------------
+    //Latest Forum Topics
+    if (!settings["latestForum"]) {
+        $("#lthreads, .threads").hide();
+    }
 }
