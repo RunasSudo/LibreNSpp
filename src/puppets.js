@@ -4,15 +4,18 @@ function setupPuppets() {
             $('<div id="puppetsbox" style="position: absolute; top: 0; right: 130px; margin: 6px 16px 0 0; z-index: 100;"></div>')
             .html('<a id="puppetsbox_button" href="javascript:void(0);" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">Puppets</a>')
         );
+        $("#banner, #nsbanner").append(
+            $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 21px; right: 145px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
+        );
     } else { // Rift
         $("#banner .belspacer:not(.belspacermain)").after(
             $('<div class="bel" id="puppetsbox"></div>')
                 .html('<div class="belcontent"><a class="bellink" id="puppetsbox_button" href="javascript:void(0);" style=""><i class="icon-town-hall"></i>PUPPETS</a></div>')
         );
+        $("#banner .belspacer:not(.belspacermain)").append(
+            $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,1); position: absolute; top: 55px; right: 98px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
+        );
     }
-    $("#banner, #nsbanner").append(
-        $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 21px; right: 145px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
-    );
     
     
     $("#puppetsbox_button").click(function() {
