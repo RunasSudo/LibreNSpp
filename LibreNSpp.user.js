@@ -76,16 +76,43 @@ function allPage() {
     //--------------------
     //Settings Link
     setupSettings();
+    
+    //--------------------
+    //Latest Forum Topics
+    if (!settings["latestForum"]) {
+        $("#lthreads, .threads").hide();
+    }
+    
+    //--------------------
+    //Footer note
+    $("#footbar").append('  &middot;  <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">LibreNS++</a> ' + version + '!');
+    
+    //--------------------
+    //Sidebar
+    $(".panelcontent .menu li:nth-child(5) ul.popoutmenu").append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=subscribed"><i class="icon-radar"></i>Subscribed</a></li>')
+                                                          .append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=bookmarks"><i class="icon-book"></i>Bookmarked</a></li>');
 }
 
 function setupPuppets() {
-    $("#banner, #nsbanner").prepend(
-        $('<div id="puppetsbox" style="position: absolute; top: 0; right: 130px; margin: 6px 16px 0 0; z-index: 100;"></div>')
-        .html('<a id="puppetsbox_button" href="javascript:void(0);" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">Puppets</a>')
-    );
-    $("#banner, #nsbanner").append(
-        $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 21px; right: 145px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
-    );
+    if (!rift) {
+        $("#banner, #nsbanner").prepend(
+            $('<div id="puppetsbox" style="position: absolute; top: 0; right: 130px; margin: 6px 16px 0 0; z-index: 100;"></div>')
+            .html('<a id="puppetsbox_button" href="javascript:void(0);" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">Puppets</a>')
+        );
+        $("#banner, #nsbanner").append(
+            $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 21px; right: 145px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
+        );
+    } else {
+        $("#banner .belspacer:not(.belspacermain)").after(
+            $('<div class="bel" id="puppetsbox"></div>')
+            .html('<div class="belcontent"><a class="bellink" id="puppetsbox_button" href="javascript:void(0);"><i class="icon-town-hall"></i>PUPPETS</a></div>')
+        );
+        $("#banner .belspacer:not(.belspacermain)").append(
+            $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,1); position: absolute; top: 55px; right: 98px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
+        );
+    }
+    
+    
     $("#puppetsbox_button").click(function() {
         $("#puppetsbox_popup").fadeToggle();
     });
@@ -180,10 +207,17 @@ function makeDeletePuppetHandler(name) {
 }
 
 function setupSettings() {
-    $("#banner, #nsbanner").prepend(
-        $('<div style="position: absolute; top: 0; right: 200px; margin: 6px 16px 0 0; z-index: 100;"></div>')
-        .html('<a href="//www.nationstates.net/page=blank/x-librenspp=settings" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">LibreNS++</a>')
-    );
+    if (!rift) {
+        $("#banner, #nsbanner").prepend(
+             $('<div style="position: absolute; top: 0; right: 200px; margin: 6px 16px 0 0; z-index: 100;"></div>')
+             .html('<a href="//www.nationstates.net/page=blank/x-librenspp=settings" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">LibreNS++</a>')
+        );
+    } else {
+        $("#banner .belspacer:not(.belspacermain)").after(
+             $('<div class="bel"></div>')
+             .html('<div class="belcontent"><a class="bellink" href="//www.nationstates.net/page=blank/x-librenspp=settings"><i class="icon-lightbulb"></i>LIBRENS++</a></div>')
+        );
+    }
 }
 
 function loadSettings() {
@@ -191,6 +225,7 @@ function loadSettings() {
     settings["liveRMBupdate"] = NS_getValue("setting_liveRMBupdate", true) == "true";
     settings["regionCustomise"] = NS_getValue("setting_regionCustomise", true) == "true";
     settings["regionIRC"] = NS_getValue("setting_regionIRC", true) == "true";
+    settings["latestForum"] = NS_getValue("setting_latestForum", true) == "true";
     settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
     
     return settings;
@@ -210,6 +245,7 @@ function manageSettings() {
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
     pageContent += '<input type="checkbox" id="regionCustomise"><label for="regionCustomise">Enable regional customisation.</label><br>';
     pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC"><label for="regionIRC">Enable regional IRC.</label><br>';
+    pageContent += '<input type="checkbox" id="latestForum"><label for="latestForum">Show latest forum topics in the sidebar.</label><br>';
     pageContent += '<br>';
     pageContent += '<h2>NationStates++ Compatibility</h2>';
     pageContent += '<input type="checkbox" id="nsppTitles"><label for="nsppTitles">Enable NationStates++ regional titles.</label><br>';
@@ -222,6 +258,7 @@ function manageSettings() {
     $("#liveRMBupdate").prop("checked", settings["liveRMBupdate"]);
     $("#regionCustomise").prop("checked", settings["regionCustomise"]);
     $("#regionIRC").prop("checked", settings["regionIRC"]);
+    $("#latestForum").prop("checked", settings["latestForum"]);
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
     
     $("#librensppSettings input[type='checkbox']").change(function() {
@@ -385,8 +422,17 @@ function updateDispatchJSON() {
 }
 
 //====================
+//Detect Rift
+function isRift() {
+    return $(".bel.bannernation").length == 1;
+}
+
+var rift = false; // this is set in run(), assume false to be safer
+
+//====================
 //Basic Code
 function run() {
+    rift = isRift();
     allPage();
 
     //--------------------
