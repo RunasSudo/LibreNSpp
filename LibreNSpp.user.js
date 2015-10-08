@@ -288,6 +288,7 @@ function loadSettingBool(setting, def) {
 function loadSettings() {
     loadSettingBool("infiniteRMBScroll", true);
     loadSettingBool("liveRMBupdate", true);
+    loadSettingBool("soundRMBupdate", false);
     loadSettingBool("regionCustomise", true);
     loadSettingBool("regionIRC", true);
     loadSettingBool("latestForum", true);
@@ -310,6 +311,8 @@ function manageSettings() {
     pageContent += '<h2>LibreNS++ Features</h2>';
     pageContent += '<input type="checkbox" id="infiniteRMBScroll"><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
     pageContent += '<input type="checkbox" id="liveRMBupdate"><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
+    pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="soundRMBupdate"><label for="soundRMBupdate">Play a notification noise when a new RMB post arrives.</label><br>';
+    pageContent += '<audio>&nbsp;&nbsp;&nbsp;If you can see this text, the notification sound is not supported by your browser.<br></audio>';
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
     pageContent += '<input type="checkbox" id="regionCustomise"><label for="regionCustomise">Enable regional customisation.</label><br>';
     pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC"><label for="regionIRC">Enable regional IRC.</label><br>';
@@ -329,6 +332,7 @@ function manageSettings() {
     
     $("#infiniteRMBScroll").prop("checked", settings["infiniteRMBScroll"]);
     $("#liveRMBupdate").prop("checked", settings["liveRMBupdate"]);
+    $("#soundRMBupdate").prop("checked", settings["soundRMBupdate"]);
     $("#regionCustomise").prop("checked", settings["regionCustomise"]);
     $("#regionIRC").prop("checked", settings["regionIRC"]);
     $("#latestForum").prop("checked", settings["latestForum"]);
@@ -404,6 +408,9 @@ function regionPage(regionSettings) {
     //Live RMB updates
     if (settings["liveRMBupdate"]) {
         updateRMB();
+        if (settings["soundRMBupdate"]) {
+            loadAudio();
+        }
     }
     
     //--------------------
@@ -440,6 +447,9 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                 if ($("div#" + post.id).length == 0) { //It's a new post!
                     $(post).insertBefore(".rmbrow:first").linkify();
                     rmbOffset += 1;
+                    if (settings["soundRMBupdate"]) {
+                        playSound();
+                    }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
                 }
@@ -465,6 +475,13 @@ function onPostRMB() { //Triggered when submitting a new post to the RMB. Used t
     return true;
 }
 
+function loadAudio() {
+    
+}
+
+function playAudio() {
+    
+}
 function dispatchEditor() {
     var regionSettings = {};
     if ($("textarea[name=\"message\"]").val().split("\n").length >= 3)
