@@ -32,7 +32,6 @@ function LS_listValues() {
 }
 
 function GM_getValueBool(key, def) {
-    console.log(key + " " + GM_getValue(key))
     if (GM_getValue(key) == undefined) {
         return def;
     } else {
