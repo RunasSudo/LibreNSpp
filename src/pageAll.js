@@ -16,6 +16,9 @@ function allPage() {
     if (settings["cosmetic"] && rift) {
         cosmetic();
     }
+    if (settings["floatingSidebar"] && rift) {
+        floatingSidebar();
+    }
     
     //--------------------
     //Latest Forum Topics

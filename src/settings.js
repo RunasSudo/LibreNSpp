@@ -19,6 +19,7 @@ function loadSettings() {
     settings["regionIRC"] = NS_getValue("setting_regionIRC", true) == "true";
     settings["latestForum"] = NS_getValue("setting_latestForum", true) == "true";
     settings["cosmetic"] = NS_getValue("setting_cosmetic", true) == "true";
+    settings["floatingSidebar"] = NS_getValue("setting_floatingSidebar", true) == "true";
     settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
     
     return settings;
@@ -39,7 +40,8 @@ function manageSettings() {
     pageContent += '<input type="checkbox" id="regionCustomise"><label for="regionCustomise">Enable regional customisation.</label><br>';
     pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC"><label for="regionIRC">Enable regional IRC.</label><br>';
     pageContent += '<input type="checkbox" id="latestForum"><label for="latestForum">Show latest forum topics in the sidebar.</label><br>';
-    pageContent += '<input type="checkbox" id="cosmetic"><label for="cosmetic">Apply various minor cosmetic changes. (Requires Rift.)</label></input><br>';
+    pageContent += '<input type="checkbox" id="cosmetic"><label for="cosmetic">Apply various minor cosmetic changes. (Requires Rift.)</label><br>';
+    pageContent += '<input type="checkbox" id="floatingSidebar"><label for="floatingSidebar">Float the sidebar, so it follows you as you scroll down. (Requires Rift.)</label><br>';
     pageContent += '<br>';
     pageContent += '<h2>NationStates++ Compatibility</h2>';
     pageContent += '<input type="checkbox" id="nsppTitles"><label for="nsppTitles">Enable NationStates++ regional titles.</label><br>';
@@ -54,9 +56,10 @@ function manageSettings() {
     $("#regionIRC").prop("checked", settings["regionIRC"]);
     $("#latestForum").prop("checked", settings["latestForum"]);
     $("#cosmetic").prop("checked", settings["cosmetic"]);
+    $("#floatingSidebar").prop("checked", settings["floatingSidebar"]);
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
     
-    $("#cosmetic").prop("disabled", rift ? undefined : "needs Rift")
+    $("#cosmetic, #floatingSidebar").prop("disabled", rift ? undefined : "needs Rift");
     
     $("#librensppSettings input[type='checkbox']").change(function() {
         NS_setValue("setting_" + this.id, this.checked);
