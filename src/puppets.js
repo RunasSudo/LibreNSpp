@@ -19,6 +19,9 @@ function setupPuppets() {
     
     
     $("#puppetsbox_button").click(function() {
+        if (!settings["nagPuppets"] && typeof GM_getValue != "function") {
+            window.alert("Warning! Your browser/userscript extension does not support saving passwords securely. Proceed at your own risk!\nThis warning can be suppressed in the settings.");
+        }
         $("#puppetsbox_popup").fadeToggle();
     });
     populatePuppets();

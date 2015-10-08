@@ -12,15 +12,20 @@ function setupSettings() {
     }
 }
 
+function loadSettingBool(setting, def) {
+    settings[setting] = NS_getValueBool("setting_" + setting, def);
+}
+
 function loadSettings() {
-    settings["infiniteRMBScroll"] = NS_getValueBool("setting_infiniteRMBScroll", true);
-    settings["liveRMBupdate"] = NS_getValueBool("setting_liveRMBupdate", true);
-    settings["regionCustomise"] = NS_getValueBool("setting_regionCustomise", true);
-    settings["regionIRC"] = NS_getValueBool("setting_regionIRC", true);
-    settings["latestForum"] = NS_getValueBool("setting_latestForum", true);
-    settings["cosmetic"] = NS_getValueBool("setting_cosmetic", true);
-    settings["floatingSidebar"] = NS_getValueBool("setting_floatingSidebar", true);
-    settings["nsppTitles"] = NS_getValueBool("setting_nsppTitles", true);
+    loadSettingBool("infiniteRMBScroll", true);
+    loadSettingBool("liveRMBupdate", true);
+    loadSettingBool("regionCustomise", true);
+    loadSettingBool("regionIRC", true);
+    loadSettingBool("latestForum", true);
+    loadSettingBool("cosmetic", true);
+    loadSettingBool("floatingSidebar", true);
+    loadSettingBool("nsppTitles", true);
+    loadSettingBool("nagPuppets", false);
     
     return settings;
 }
@@ -47,6 +52,9 @@ function manageSettings() {
     pageContent += '<input type="checkbox" id="nsppTitles"><label for="nsppTitles">Enable NationStates++ regional titles.</label><br>';
     pageContent += '<input type="checkbox" id="nsppNewspaper" disabled><label for="nsppNewspaper">Enable NationStates++ regional newspapers.</label><br>';
     pageContent += '<input type="checkbox" id="nsppIRC" disabled><label for="nsppIRC">Enable NationStates++ regional IRC.</label><br>';
+    pageContent += '<br>';
+    pageContent += '<h2>Use at your own risk!</h2>';
+    pageContent += '<input type="checkbox" id="nagPuppets"><label for="nsppTitles">Suppress warning about insecure puppet password storage.</label><br>';
     pageContent += '</form>';
     $("#content").html(pageContent);
     
@@ -58,6 +66,7 @@ function manageSettings() {
     $("#cosmetic").prop("checked", settings["cosmetic"]);
     $("#floatingSidebar").prop("checked", settings["floatingSidebar"]);
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
+    $("#nagPuppets").prop("checked", settings["nagPuppets"]);
     
     $("#cosmetic, #floatingSidebar").prop("disabled", rift ? undefined : "needs Rift");
     

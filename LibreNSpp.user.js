@@ -1,3 +1,19 @@
+//    LibreNS++ | Secure NationStates++ Alternative
+//    Copyright (C) 2014-2015  RunasSudo (Yingtong Li)
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 // ==UserScript==
 // @name        LibreNS++
 // @namespace   https://github.com/RunasSudo/LibreNSpp
@@ -6,6 +22,7 @@
 // @match       http://*.nationstates.net/*
 // @match       https://*.nationstates.net/*
 // @copyright   2014-2015, RunasSudo (Yingtong Li)
+
 // ==/UserScript==
 
 var version = "0.0a18";
@@ -66,11 +83,19 @@ function LS_listValues() {
     return list;
 }
 
-if (typeof GM_getValue=="function") { if (GM_getValue.toString && GM_getValue.toString().indexOf("not supported") > -1) { NS_getValue = LS_getValue; console.log("Using LS_getValue"); } else { NS_getValue = GM_getValue; console.log("Using GM_getValue"); } } else { NS_getValue = LS_getValue; console.log("Using LS_getValue"); };
-if (typeof GM_getValue=="function") { if (GM_getValue.toString && GM_getValue.toString().indexOf("not supported") > -1) { NS_getValueBool = LS_getValueBool; console.log("Using LS_getValueBool"); } else { NS_getValueBool = GM_getValue; console.log("Using GM_getValue"); } } else { NS_getValueBool = LS_getValueBool; console.log("Using LS_getValueBool"); };
-if (typeof GM_setValue=="function") { if (GM_setValue.toString && GM_setValue.toString().indexOf("not supported") > -1) { NS_setValue = LS_setValue; console.log("Using LS_setValue"); } else { NS_setValue = GM_setValue; console.log("Using GM_setValue"); } } else { NS_setValue = LS_setValue; console.log("Using LS_setValue"); };
-if (typeof GM_deleteValue=="function") { if (GM_deleteValue.toString && GM_deleteValue.toString().indexOf("not supported") > -1) { NS_deleteValue = LS_deleteValue; console.log("Using LS_deleteValue"); } else { NS_deleteValue = GM_deleteValue; console.log("Using GM_deleteValue"); } } else { NS_deleteValue = LS_deleteValue; console.log("Using LS_deleteValue"); };
-if (typeof GM_listValues=="function") { if (GM_listValues.toString && GM_listValues.toString().indexOf("not supported") > -1) { NS_listValues = LS_listValues; console.log("Using LS_listValues"); } else { NS_listValues = GM_listValues; console.log("Using GM_listValues"); } } else { NS_listValues = LS_listValues; console.log("Using LS_listValues"); };
+function GM_getValueBool(key, def) {
+    if (GM_getValue(key) == undefined) {
+        return def;
+    } else {
+        return GM_getValue(key) == "true";
+    }
+}
+
+if (typeof GM_getValue=="function") { NS_getValue = GM_getValue; console.log("Using GM_getValue"); } else { NS_getValue = LS_getValue; console.log("Using LS_getValue"); };
+if (typeof GM_getValue == "function") { NS_getValueBool = GM_getValueBool; } else { NS_getValueBool = LS_getValueBool; }
+if (typeof GM_setValue=="function") { NS_setValue = GM_setValue; console.log("Using GM_setValue"); } else { NS_setValue = LS_setValue; console.log("Using LS_setValue"); };
+if (typeof GM_deleteValue=="function") { NS_deleteValue = GM_deleteValue; console.log("Using GM_deleteValue"); } else { NS_deleteValue = LS_deleteValue; console.log("Using LS_deleteValue"); };
+if (typeof GM_listValues=="function") { NS_listValues = GM_listValues; console.log("Using GM_listValues"); } else { NS_listValues = LS_listValues; console.log("Using LS_listValues"); };
 
 
 function cosmetic() {
@@ -143,6 +168,9 @@ function setupPuppets() {
     
     
     $("#puppetsbox_button").click(function() {
+        if (!settings["nagPuppets"] && typeof GM_getValue != "function") {
+            window.alert("Warning! Your browser/userscript extension does not support saving passwords securely. Proceed at your own risk!\nThis warning can be suppressed in the settings.");
+        }
         $("#puppetsbox_popup").fadeToggle();
     });
     populatePuppets();
@@ -249,15 +277,20 @@ function setupSettings() {
     }
 }
 
+function loadSettingBool(setting, def) {
+    settings[setting] = NS_getValueBool("setting_" + setting, def);
+}
+
 function loadSettings() {
-    settings["infiniteRMBScroll"] = NS_getValueBool("setting_infiniteRMBScroll", true);
-    settings["liveRMBupdate"] = NS_getValueBool("setting_liveRMBupdate", true);
-    settings["regionCustomise"] = NS_getValueBool("setting_regionCustomise", true);
-    settings["regionIRC"] = NS_getValueBool("setting_regionIRC", true);
-    settings["latestForum"] = NS_getValueBool("setting_latestForum", true);
-    settings["cosmetic"] = NS_getValueBool("setting_cosmetic", true);
-    settings["floatingSidebar"] = NS_getValueBool("setting_floatingSidebar", true);
-    settings["nsppTitles"] = NS_getValueBool("setting_nsppTitles", true);
+    loadSettingBool("infiniteRMBScroll", true);
+    loadSettingBool("liveRMBupdate", true);
+    loadSettingBool("regionCustomise", true);
+    loadSettingBool("regionIRC", true);
+    loadSettingBool("latestForum", true);
+    loadSettingBool("cosmetic", true);
+    loadSettingBool("floatingSidebar", true);
+    loadSettingBool("nsppTitles", true);
+    loadSettingBool("nagPuppets", false);
     
     return settings;
 }
@@ -284,6 +317,9 @@ function manageSettings() {
     pageContent += '<input type="checkbox" id="nsppTitles"><label for="nsppTitles">Enable NationStates++ regional titles.</label><br>';
     pageContent += '<input type="checkbox" id="nsppNewspaper" disabled><label for="nsppNewspaper">Enable NationStates++ regional newspapers.</label><br>';
     pageContent += '<input type="checkbox" id="nsppIRC" disabled><label for="nsppIRC">Enable NationStates++ regional IRC.</label><br>';
+    pageContent += '<br>';
+    pageContent += '<h2>Use at your own risk!</h2>';
+    pageContent += '<input type="checkbox" id="nagPuppets"><label for="nsppTitles">Suppress warning about insecure puppet password storage.</label><br>';
     pageContent += '</form>';
     $("#content").html(pageContent);
     
@@ -295,6 +331,7 @@ function manageSettings() {
     $("#cosmetic").prop("checked", settings["cosmetic"]);
     $("#floatingSidebar").prop("checked", settings["floatingSidebar"]);
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
+    $("#nagPuppets").prop("checked", settings["nagPuppets"]);
     
     $("#cosmetic, #floatingSidebar").prop("disabled", rift ? undefined : "needs Rift");
     
