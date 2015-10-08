@@ -64,6 +64,17 @@ if (typeof GM_deleteValue=="function") { if (GM_deleteValue.toString && GM_delet
 if (typeof GM_listValues=="function") { if (GM_listValues.toString && GM_listValues.toString().indexOf("not supported") > -1) { NS_listValues = LS_listValues; console.log("Using LS_listValues"); } else { NS_listValues = GM_listValues; console.log("Using GM_listValues"); } } else { NS_listValues = LS_listValues; console.log("Using LS_listValues"); };
 
 
+function cosmetic() {
+    $(".panelcontent").css("margin-left", "0px")
+                      .css("border-top-left-radius", "0px")
+                      .css("border-bottom-left-radius", "0px");
+    $(".accessiblitylink").hide(); // This is a typo in NS, don't change it unless NS changes it
+}
+
+// This messes with the footer a little bit on pages that are shorter than your screen height.
+function floatingSidebar() {
+    $("#panel").css("position", "fixed");
+}
 var settings = [];
 
 function allPage() {
@@ -76,16 +87,52 @@ function allPage() {
     //--------------------
     //Settings Link
     setupSettings();
+    
+    //--------------------
+    //Cosmetic Adjustments
+    if (settings["cosmetic"] && rift) {
+        cosmetic();
+    }
+    if (settings["floatingSidebar"] && rift) {
+        floatingSidebar();
+    }
+    
+    //--------------------
+    //Latest Forum Topics
+    if (!settings["latestForum"]) {
+        $("#lthreads, .threads").hide();
+    }
+    
+    //--------------------
+    //Footer note
+    $("#footbar").append('  &middot;  <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">LibreNS++</a> ' + version + '!');
+    
+    //--------------------
+    //Sidebar
+    $(".panelcontent .menu li:nth-child(5) ul.popoutmenu").append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=subscribed"><i class="icon-radar"></i>Subscribed</a></li>')
+                                                          .append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=bookmarks"><i class="icon-book"></i>Bookmarked</a></li>');
 }
 
 function setupPuppets() {
-    $("#banner, #nsbanner").prepend(
-        $('<div id="puppetsbox" style="position: absolute; top: 0; right: 130px; margin: 6px 16px 0 0; z-index: 100;"></div>')
-        .html('<a id="puppetsbox_button" href="javascript:void(0);" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">Puppets</a>')
-    );
-    $("#banner, #nsbanner").append(
-        $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 21px; right: 145px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
-    );
+    if (!rift) {
+        $("#banner, #nsbanner").prepend(
+            $('<div id="puppetsbox" style="position: absolute; top: 0; right: 130px; margin: 6px 16px 0 0; z-index: 100;"></div>')
+            .html('<a id="puppetsbox_button" href="javascript:void(0);" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">Puppets</a>')
+        );
+        $("#banner, #nsbanner").append(
+            $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,0.8); position: absolute; top: 21px; right: 145px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
+        );
+    } else {
+        $("#banner .belspacer:not(.belspacermain)").after(
+            $('<div class="bel" id="puppetsbox"></div>')
+            .html('<div class="belcontent"><a class="bellink" id="puppetsbox_button" href="javascript:void(0);"><i class="icon-town-hall"></i>PUPPETS</a></div>')
+        );
+        $("#banner .belspacer:not(.belspacermain)").append(
+            $('<div id="puppetsbox_popup" style="color: white; background-color: rgba(0,0,0,1); position: absolute; top: 55px; right: 98px; padding: 8px; border-radius: 8px; display: none;"><span id="listPuppets"></span><a id="btnManagePuppets" style="color: white;" href="/page=blank/x-librenspp=puppets">Manage Puppets</a></div>')
+        );
+    }
+    
+    
     $("#puppetsbox_button").click(function() {
         $("#puppetsbox_popup").fadeToggle();
     });
@@ -180,13 +227,27 @@ function makeDeletePuppetHandler(name) {
 }
 
 function setupSettings() {
-    $("#banner, #nsbanner").prepend(
-        $('<div style="position: absolute; top: 0; right: 200px; margin: 6px 16px 0 0; z-index: 100;"></div>')
-        .html('<a href="/page=blank/x-librenspp=settings" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">LibreNS++</a>')
-    );
+    if (!rift) {
+        $("#banner, #nsbanner").prepend(
+             $('<div style="position: absolute; top: 0; right: 200px; margin: 6px 16px 0 0; z-index: 100;"></div>')
+             .html('<a href="//www.nationstates.net/page=blank/x-librenspp=settings" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">LibreNS++</a>')
+        );
+    } else {
+        $("#banner .belspacer:not(.belspacermain)").after(
+             $('<div class="bel"></div>')
+             .html('<div class="belcontent"><a class="bellink" href="//www.nationstates.net/page=blank/x-librenspp=settings"><i class="icon-lightbulb"></i>LIBRENS++</a></div>')
+        );
+    }
 }
 
 function loadSettings() {
+    settings["infiniteRMBScroll"] = NS_getValue("setting_infiniteRMBScroll", true) == "true";
+    settings["liveRMBupdate"] = NS_getValue("setting_liveRMBupdate", true) == "true";
+    settings["regionCustomise"] = NS_getValue("setting_regionCustomise", true) == "true";
+    settings["regionIRC"] = NS_getValue("setting_regionIRC", true) == "true";
+    settings["latestForum"] = NS_getValue("setting_latestForum", true) == "true";
+    settings["cosmetic"] = NS_getValue("setting_cosmetic", true) == "true";
+    settings["floatingSidebar"] = NS_getValue("setting_floatingSidebar", true) == "true";
     settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
     
     return settings;
@@ -194,17 +255,21 @@ function loadSettings() {
 
 function manageSettings() {
     var pageContent = '<h1>LibreNS++ Settings</h1>';
+    pageContent += '<p style="font-size: 0.9em;">LibreNS++ version ' + version + '. <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">Forum</a>, <a href="https://github.com/RunasSudo/LibreNSpp">GitHub</a>, <a href="https://www.nationstates.net/nation=south_jarvis">South Jarvis (creator)</a>.</p>';
     pageContent += '<form id="librensppSettings" onSubmit="return false;">';
     pageContent += '<h2>Updates</h2>';
     pageContent += '<input type="checkbox" id="autoUpdate" disabled><label for="autoUpdate">Check for updates automatically.</label><br>';
     pageContent += '<input type="button" id="updateNow" value="Check now" disabled> <span id="updateStatus">No new updates. Last checked: never.</span><br>';
     pageContent += '<br>';
     pageContent += '<h2>LibreNS++ Features</h2>';
-    pageContent += '<input type="checkbox" id="infiniteRMBScroll" checked disabled><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
-    pageContent += '<input type="checkbox" id="liveRMBupdate" checked disabled><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
+    pageContent += '<input type="checkbox" id="infiniteRMBScroll"><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
+    pageContent += '<input type="checkbox" id="liveRMBupdate"><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
-    pageContent += '<input type="checkbox" id="regionCustomise" checked disabled><label for="regionCustomise">Enable regional customisation.</label><br>';
-    pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC" checked disabled><label for="regionIRC">Enable regional IRC.</label><br>';
+    pageContent += '<input type="checkbox" id="regionCustomise"><label for="regionCustomise">Enable regional customisation.</label><br>';
+    pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC"><label for="regionIRC">Enable regional IRC.</label><br>';
+    pageContent += '<input type="checkbox" id="latestForum"><label for="latestForum">Show latest forum topics in the sidebar.</label><br>';
+    pageContent += '<input type="checkbox" id="cosmetic"><label for="cosmetic">Apply various minor cosmetic changes. (Requires Rift.)</label><br>';
+    pageContent += '<input type="checkbox" id="floatingSidebar"><label for="floatingSidebar">Float the sidebar, so it follows you as you scroll down. (Requires Rift.)</label><br>';
     pageContent += '<br>';
     pageContent += '<h2>NationStates++ Compatibility</h2>';
     pageContent += '<input type="checkbox" id="nsppTitles"><label for="nsppTitles">Enable NationStates++ regional titles.</label><br>';
@@ -213,22 +278,32 @@ function manageSettings() {
     pageContent += '</form>';
     $("#content").html(pageContent);
     
+    $("#infiniteRMBScroll").prop("checked", settings["infiniteRMBScroll"]);
+    $("#liveRMBupdate").prop("checked", settings["liveRMBupdate"]);
+    $("#regionCustomise").prop("checked", settings["regionCustomise"]);
+    $("#regionIRC").prop("checked", settings["regionIRC"]);
+    $("#latestForum").prop("checked", settings["latestForum"]);
+    $("#cosmetic").prop("checked", settings["cosmetic"]);
+    $("#floatingSidebar").prop("checked", settings["floatingSidebar"]);
     $("#nsppTitles").prop("checked", settings["nsppTitles"]);
+    
+    $("#cosmetic, #floatingSidebar").prop("disabled", rift ? undefined : "needs Rift");
     
     $("#librensppSettings input[type='checkbox']").change(function() {
         NS_setValue("setting_" + this.id, this.checked);
+        // note for future: if any settings that affect the settings page are added, they won't take effect until reload (probably for the better)
     });
 }
 
 function regionPage(regionSettings) {
     //--------------------
     //Custom titles
-    if (regionSettings.titles) {
+    if (regionSettings.titles && settings["regionCustomise"]) {
         if (regionSettings.titles.delegate)
             $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
-    } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
+    } else if (settings.nsppTitles && settings["regionCustomise"]) { //Only load if LibreNS++ settings not present.
         $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
             //nsppTitles is already a JSON object.
             if (nsppTitles) {
@@ -242,7 +317,7 @@ function regionPage(regionSettings) {
 
     //--------------------
     //Embedded IRC
-    if (regionSettings.irc) {
+    if (regionSettings.irc && settings["regionCustomise"] && settings["regionIRC"]) {
         var ircURL = "https:/" + "/kiwiirc.com/client/";
         if (regionSettings.irc.server) {
             ircURL += regionSettings.irc.server + "/";
@@ -263,14 +338,19 @@ function regionPage(regionSettings) {
         $(".rmbolder").hide(); //GO AWAI!
 
         $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-
+        
         //Add scroll detector
         $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
             .html("Infinite Scroll!")
             .insertAfter(rmb.parent());
-
-        infiniteScroll();
+    
+        if (settings["infiniteRMBScroll"]) {
+            infiniteScroll();
+        } else {
+            $("#infiniteScroll").html("Infinite Scroll disabled in settings.")
+        }
     }
+    
 
     //--------------------
     //Live RMB updates
@@ -284,6 +364,9 @@ function regionPage(regionSettings) {
 var rmbOffset = 0;
 
 function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling.
+    if (!settings["infiniteRMBScroll"]) {
+        return;
+    }
     if ($("#infiniteScroll").offset().top <= $(window).scrollTop() + $(window).height()) { //Check if #infiniteScroll is in view.
         //Load new RMB messages.
         $("#infiniteScroll").html("Loading&hellip;");
@@ -304,6 +387,9 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
 }
 
 function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
+    if (!settings["liveRMBupdate"]) {
+        return;
+    }
     $.get("/page=ajax/a=rmb/region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8) + "/offset=0", function(data) {
         $(data).each(function(i, post) {
             if (post.id) { //Only process it if it's a post.
@@ -363,14 +449,20 @@ function updateDispatchJSON() {
     $("textarea[name=\"message\"]").val("This dispatch is automatically generated by LibreNS++ (http:/" + "/forum.nationstates.net/viewtopic.php?f=15&t=304199). Edit manually at your own risk!\n\n" + btoa(json));
 }
 
+var rift = false; // this is set in run(), assume false to be safer
+
 //====================
 //Basic Code
 function run() {
+    rift = $(".bel.bannernation").length == 1;
     allPage();
 
     //--------------------
     //Region page things
     if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
+        if (!settings["regionCustomise"]) {
+            regionPage({});
+        }
         //--------------------
         //Load region settings
         var foundSettings = false;
