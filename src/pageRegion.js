@@ -93,6 +93,9 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                 if ($("div#" + post.id).length == 0) { //It's a new post!
                     $(post).insertBefore(".rmbrow:first").linkify();
                     rmbOffset += 1;
+                    if (settings["soundRMBupdate"]) {
+                        notifySound();
+                    }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
                 }
