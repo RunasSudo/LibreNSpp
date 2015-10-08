@@ -1,18 +1,24 @@
+var rift = false; // this is set in run(), assume false to be safer
+
 //====================
 //Basic Code
 function run() {
+    rift = $(".bel.bannernation").length == 1;
     allPage();
 
     //--------------------
     //Region page things
     if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
+        if (!settings["regionCustomise"]) {
+            regionPage({});
+        }
         //--------------------
         //Load region settings
         var foundSettings = false;
         for (var i = 0; i < $(".dispatchlist h3 a").length; i++) {
-            if ($(".dispatchlist h3 a").get(i).innerText == "LibreNS++") {
+            if ($(".dispatchlist h3 a").get(i).innerHTML == "LibreNS++") {
                 $.get($(".dispatchlist h3 a").get(i).href, function(data) {
-                    regionPage(JSON.parse(atob($(data).find("#dispatch p").get(0).innerText)));
+                    regionPage(JSON.parse(atob($(data).find("#dispatch p").get(0).innerHTML)));
                 });
                 foundSettings = true;
                 break;
