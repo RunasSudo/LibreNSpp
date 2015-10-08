@@ -76,6 +76,5 @@ function manageSettings() {
     
     $("#librensppSettings input[type='checkbox']").change(function() {
         NS_setValue("setting_" + this.id, this.checked);
-        // note for future: if any settings that affect the settings page are added, they won't take effect until reload (probably for the better)
     });
 }

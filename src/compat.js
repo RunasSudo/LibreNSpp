@@ -10,7 +10,8 @@ function LS_getValueBool(key, def) { // Comparing strings and booleans is hard :
     if (localStorage.getItem(key) == null) {
         return def;
     } else {
-        return localStorage.getItem(key) == "true";
+        return localStorage.getItem(key) == "true"
+            || localStorage.getItem(key) === true;
     }
 }
 
@@ -31,10 +32,12 @@ function LS_listValues() {
 }
 
 function GM_getValueBool(key, def) {
+    console.log(key + " " + GM_getValue(key))
     if (GM_getValue(key) == undefined) {
         return def;
     } else {
-        return GM_getValue(key) == "true";
+        return GM_getValue(key) == "true"
+            || GM_getValue(key) === true;
     }
 }
 
