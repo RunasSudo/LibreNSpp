@@ -12,6 +12,12 @@ function allPage() {
     setupSettings();
     
     //--------------------
+    //Cosmetic Adjustments
+    if (settings["cosmetic"] && rift) {
+        cosmetic();
+    }
+    
+    //--------------------
     //Latest Forum Topics
     if (!settings["latestForum"]) {
         $("#lthreads, .threads").hide();

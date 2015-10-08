@@ -1,15 +1,9 @@
-//====================
-//Detect Rift
-function isRift() {
-    return $(".bel.bannernation").length == 1;
-}
-
 var rift = false; // this is set in run(), assume false to be safer
 
 //====================
 //Basic Code
 function run() {
-    rift = isRift();
+    rift = $(".bel.bannernation").length == 1;
     allPage();
 
     //--------------------
