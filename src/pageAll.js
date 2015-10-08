@@ -28,7 +28,7 @@ function allPage() {
     
     //--------------------
     //Footer note
-    $("#footbar").append('  &middot;  <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">LibreNS++</a> ' + version + '!');
+    $("#footbar").append('  &middot;  <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">LibreNS++</a> ' + version);
     
     //--------------------
     //Sidebar

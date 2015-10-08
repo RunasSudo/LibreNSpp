@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name        LibreNS++
 // @namespace   https://github.com/RunasSudo/LibreNSpp
-// @version     0.0a17
+// @version     0.0a18
 // @description Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match       http://*.nationstates.net/*
 // @match       https://*.nationstates.net/*
-// @copyright   2014, RunasSudo
+// @copyright   2014-2015, RunasSudo (Yingtong Li)
 // ==/UserScript==
 
-var version = "0.0a17";
+var version = "0.0a18";
 
 
 /*! jQuery v2.1.1 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */
@@ -114,7 +114,7 @@ function allPage() {
     
     //--------------------
     //Footer note
-    $("#footbar").append('  &middot;  <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">LibreNS++</a> ' + version + '!');
+    $("#footbar").append('  &middot;  <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">LibreNS++</a> ' + version);
     
     //--------------------
     //Sidebar
