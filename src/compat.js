@@ -6,6 +6,14 @@ function LS_getValue(key, def) {
     return localStorage.getItem(key) || def;
 }
 
+function LS_getValueBool(key, def) { // Comparing strings and booleans is hard :(
+    if (localStorage.getItem(key) == null) {
+        return def;
+    } else {
+        return localStorage.getItem(key) == "true";
+    }
+}
+
 function LS_setValue(key, val) {
     return localStorage.setItem(key, val);
 }
@@ -23,6 +31,7 @@ function LS_listValues() {
 }
 
 replaceFunction(NS_getValue, GM_getValue, LS_getValue);
+replaceFunction(NS_getValueBool, GM_getValue, LS_getValueBool);
 replaceFunction(NS_setValue, GM_setValue, LS_setValue);
 replaceFunction(NS_deleteValue, GM_deleteValue, LS_deleteValue);
 replaceFunction(NS_listValues, GM_listValues, LS_listValues);

@@ -13,14 +13,14 @@ function setupSettings() {
 }
 
 function loadSettings() {
-    settings["infiniteRMBScroll"] = NS_getValue("setting_infiniteRMBScroll", true) == "true";
-    settings["liveRMBupdate"] = NS_getValue("setting_liveRMBupdate", true) == "true";
-    settings["regionCustomise"] = NS_getValue("setting_regionCustomise", true) == "true";
-    settings["regionIRC"] = NS_getValue("setting_regionIRC", true) == "true";
-    settings["latestForum"] = NS_getValue("setting_latestForum", true) == "true";
-    settings["cosmetic"] = NS_getValue("setting_cosmetic", true) == "true";
-    settings["floatingSidebar"] = NS_getValue("setting_floatingSidebar", true) == "true";
-    settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
+    settings["infiniteRMBScroll"] = NS_getValueBool("setting_infiniteRMBScroll", true);
+    settings["liveRMBupdate"] = NS_getValueBool("setting_liveRMBupdate", true);
+    settings["regionCustomise"] = NS_getValueBool("setting_regionCustomise", true);
+    settings["regionIRC"] = NS_getValueBool("setting_regionIRC", true);
+    settings["latestForum"] = NS_getValueBool("setting_latestForum", true);
+    settings["cosmetic"] = NS_getValueBool("setting_cosmetic", true);
+    settings["floatingSidebar"] = NS_getValueBool("setting_floatingSidebar", true);
+    settings["nsppTitles"] = NS_getValueBool("setting_nsppTitles", true);
     
     return settings;
 }

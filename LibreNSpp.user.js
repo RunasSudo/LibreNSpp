@@ -42,6 +42,14 @@ function LS_getValue(key, def) {
     return localStorage.getItem(key) || def;
 }
 
+function LS_getValueBool(key, def) { // Comparing strings and booleans is hard :(
+    if (localStorage.getItem(key) == null) {
+        return def;
+    } else {
+        return localStorage.getItem(key) == "true";
+    }
+}
+
 function LS_setValue(key, val) {
     return localStorage.setItem(key, val);
 }
@@ -59,6 +67,7 @@ function LS_listValues() {
 }
 
 if (typeof GM_getValue=="function") { if (GM_getValue.toString && GM_getValue.toString().indexOf("not supported") > -1) { NS_getValue = LS_getValue; console.log("Using LS_getValue"); } else { NS_getValue = GM_getValue; console.log("Using GM_getValue"); } } else { NS_getValue = LS_getValue; console.log("Using LS_getValue"); };
+if (typeof GM_getValue=="function") { if (GM_getValue.toString && GM_getValue.toString().indexOf("not supported") > -1) { NS_getValueBool = LS_getValueBool; console.log("Using LS_getValueBool"); } else { NS_getValueBool = GM_getValue; console.log("Using GM_getValue"); } } else { NS_getValueBool = LS_getValueBool; console.log("Using LS_getValueBool"); };
 if (typeof GM_setValue=="function") { if (GM_setValue.toString && GM_setValue.toString().indexOf("not supported") > -1) { NS_setValue = LS_setValue; console.log("Using LS_setValue"); } else { NS_setValue = GM_setValue; console.log("Using GM_setValue"); } } else { NS_setValue = LS_setValue; console.log("Using LS_setValue"); };
 if (typeof GM_deleteValue=="function") { if (GM_deleteValue.toString && GM_deleteValue.toString().indexOf("not supported") > -1) { NS_deleteValue = LS_deleteValue; console.log("Using LS_deleteValue"); } else { NS_deleteValue = GM_deleteValue; console.log("Using GM_deleteValue"); } } else { NS_deleteValue = LS_deleteValue; console.log("Using LS_deleteValue"); };
 if (typeof GM_listValues=="function") { if (GM_listValues.toString && GM_listValues.toString().indexOf("not supported") > -1) { NS_listValues = LS_listValues; console.log("Using LS_listValues"); } else { NS_listValues = GM_listValues; console.log("Using GM_listValues"); } } else { NS_listValues = LS_listValues; console.log("Using LS_listValues"); };
@@ -241,14 +250,14 @@ function setupSettings() {
 }
 
 function loadSettings() {
-    settings["infiniteRMBScroll"] = NS_getValue("setting_infiniteRMBScroll", true) == "true";
-    settings["liveRMBupdate"] = NS_getValue("setting_liveRMBupdate", true) == "true";
-    settings["regionCustomise"] = NS_getValue("setting_regionCustomise", true) == "true";
-    settings["regionIRC"] = NS_getValue("setting_regionIRC", true) == "true";
-    settings["latestForum"] = NS_getValue("setting_latestForum", true) == "true";
-    settings["cosmetic"] = NS_getValue("setting_cosmetic", true) == "true";
-    settings["floatingSidebar"] = NS_getValue("setting_floatingSidebar", true) == "true";
-    settings["nsppTitles"] = NS_getValue("setting_nsppTitles", true) == "true";
+    settings["infiniteRMBScroll"] = NS_getValueBool("setting_infiniteRMBScroll", true);
+    settings["liveRMBupdate"] = NS_getValueBool("setting_liveRMBupdate", true);
+    settings["regionCustomise"] = NS_getValueBool("setting_regionCustomise", true);
+    settings["regionIRC"] = NS_getValueBool("setting_regionIRC", true);
+    settings["latestForum"] = NS_getValueBool("setting_latestForum", true);
+    settings["cosmetic"] = NS_getValueBool("setting_cosmetic", true);
+    settings["floatingSidebar"] = NS_getValueBool("setting_floatingSidebar", true);
+    settings["nsppTitles"] = NS_getValueBool("setting_nsppTitles", true);
     
     return settings;
 }
@@ -329,32 +338,32 @@ function regionPage(regionSettings) {
 
     //--------------------
     //Infinite RMB scroll
-    var rmb = $(".rmbtable2");
-    if (rmb.length > 0) {
-        rmb.children().each(function(i, entry) {
-            $(entry).linkify();
-            rmb.prepend(entry); //Reverse order so newest are at top.
-        });
-        $(".rmbolder").hide(); //GO AWAI!
+    if (settings["infiniteRMBScroll"]) {
+        var rmb = $(".rmbtable2");
+        if (rmb.length > 0) {
+            rmb.children().each(function(i, entry) {
+                $(entry).linkify();
+                rmb.prepend(entry); //Reverse order so newest are at top.
+            });
+            $(".rmbolder").hide(); //GO AWAI!
 
-        $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-        
-        //Add scroll detector
-        $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
-            .html("Infinite Scroll!")
-            .insertAfter(rmb.parent());
-    
-        if (settings["infiniteRMBScroll"]) {
+            $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
+            
+            //Add scroll detector
+            $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
+                .html("Infinite Scroll!")
+                .insertAfter(rmb.parent());
+            
             infiniteScroll();
-        } else {
-            $("#infiniteScroll").html("Infinite Scroll disabled in settings.")
         }
     }
     
 
     //--------------------
     //Live RMB updates
-    updateRMB();
+    if (settings["liveRMBupdate"]) {
+        updateRMB();
+    }
     
     //--------------------
     //Security code updater
@@ -364,9 +373,6 @@ function regionPage(regionSettings) {
 var rmbOffset = 0;
 
 function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling.
-    if (!settings["infiniteRMBScroll"]) {
-        return;
-    }
     if ($("#infiniteScroll").offset().top <= $(window).scrollTop() + $(window).height()) { //Check if #infiniteScroll is in view.
         //Load new RMB messages.
         $("#infiniteScroll").html("Loading&hellip;");
@@ -387,9 +393,6 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
 }
 
 function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
-    if (!settings["liveRMBupdate"]) {
-        return;
-    }
     $.get("/page=ajax/a=rmb/region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8) + "/offset=0", function(data) {
         $(data).each(function(i, post) {
             if (post.id) { //Only process it if it's a post.

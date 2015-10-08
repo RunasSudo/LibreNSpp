@@ -32,32 +32,32 @@ function regionPage(regionSettings) {
 
     //--------------------
     //Infinite RMB scroll
-    var rmb = $(".rmbtable2");
-    if (rmb.length > 0) {
-        rmb.children().each(function(i, entry) {
-            $(entry).linkify();
-            rmb.prepend(entry); //Reverse order so newest are at top.
-        });
-        $(".rmbolder").hide(); //GO AWAI!
+    if (settings["infiniteRMBScroll"]) {
+        var rmb = $(".rmbtable2");
+        if (rmb.length > 0) {
+            rmb.children().each(function(i, entry) {
+                $(entry).linkify();
+                rmb.prepend(entry); //Reverse order so newest are at top.
+            });
+            $(".rmbolder").hide(); //GO AWAI!
 
-        $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-        
-        //Add scroll detector
-        $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
-            .html("Infinite Scroll!")
-            .insertAfter(rmb.parent());
-    
-        if (settings["infiniteRMBScroll"]) {
+            $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
+            
+            //Add scroll detector
+            $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
+                .html("Infinite Scroll!")
+                .insertAfter(rmb.parent());
+            
             infiniteScroll();
-        } else {
-            $("#infiniteScroll").html("Infinite Scroll disabled in settings.")
         }
     }
     
 
     //--------------------
     //Live RMB updates
-    updateRMB();
+    if (settings["liveRMBupdate"]) {
+        updateRMB();
+    }
     
     //--------------------
     //Security code updater
@@ -67,9 +67,6 @@ function regionPage(regionSettings) {
 var rmbOffset = 0;
 
 function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling.
-    if (!settings["infiniteRMBScroll"]) {
-        return;
-    }
     if ($("#infiniteScroll").offset().top <= $(window).scrollTop() + $(window).height()) { //Check if #infiniteScroll is in view.
         //Load new RMB messages.
         $("#infiniteScroll").html("Loading&hellip;");
@@ -90,9 +87,6 @@ function infiniteScroll() { //Triggered at intervals. Handles infinite scrolling
 }
 
 function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
-    if (!settings["liveRMBupdate"]) {
-        return;
-    }
     $.get("/page=ajax/a=rmb/region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8) + "/offset=0", function(data) {
         $(data).each(function(i, post) {
             if (post.id) { //Only process it if it's a post.
