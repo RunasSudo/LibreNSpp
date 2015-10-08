@@ -38,4 +38,17 @@ function allPage() {
     //Sidebar
     $(".panelcontent .menu li:nth-child(5) ul.popoutmenu").append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=subscribed"><i class="icon-radar"></i>Subscribed</a></li>')
                                                           .append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=bookmarks"><i class="icon-book"></i>Bookmarked</a></li>');
+    //
+    
+    //--------------------
+    //Check for update
+    $.get('https://raw.githubusercontent.com/RunasSudo/LibreNSpp/master/version', function(serverVersion) {
+        if (version != serverVersion) {
+            latestVersion = serverVersion;
+            signal();
+            if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1] == "x-librenspp=settings") {
+                $("#new-version").show();
+            }
+        }
+    }, 'text');
 }

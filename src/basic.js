@@ -1,4 +1,5 @@
 var rift = false; // this is set in run(), assume false to be safer
+var latestversion = version;
 
 //====================
 //Basic Code
