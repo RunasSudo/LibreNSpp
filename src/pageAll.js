@@ -42,7 +42,7 @@ function allPage() {
     
     //--------------------
     //Check for update
-    $.get('https://raw.githubusercontent.com/ViKomprenas/LibreNSpp/sound/version', function(serverVersion) {
+    $.get('https://raw.githubusercontent.com/RunasSudo/LibreNSpp/master/version', function(serverVersion) {
         if (version != serverVersion) {
             latestVersion = serverVersion;
             signal();
