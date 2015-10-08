@@ -42,13 +42,14 @@ function allPage() {
     
     //--------------------
     //Check for update
-    $.get('https://raw.githubusercontent.com/ViKomprenas/LibreNSpp/master/version', function(serverVersion) {
+    $.get('https://raw.githubusercontent.com/ViKomprenas/LibreNSpp/sound/version', function(serverVersion) {
         if (version != serverVersion) {
             latestVersion = serverVersion;
             signal();
-            if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1] == "x-librenspp=settings") {
-                $("#new-version").show();
-            }
+            $("#new-version").show();
+            $("#new-version-actual").text(latestVersion);
+        } else {
+            $("#current-version").show();
         }
     }, 'text');
 }

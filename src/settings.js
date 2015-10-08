@@ -35,7 +35,8 @@ function loadSettings() {
 function manageSettings() {
     var pageContent = '<h1>LibreNS++ Settings</h1>';
     pageContent += '<p style="font-size: 0.9em;">LibreNS++ version ' + version + '. <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">Forum</a>, <a href="https://github.com/RunasSudo/LibreNSpp">GitHub</a>, <a href="https://www.nationstates.net/nation=south_jarvis">South Jarvis (creator)</a>.</p>';
-    pageContent += '<p id="new-version" style="color: darkred; font-weight: 700;">A new version of LibreNS++ is available, please check the forum thread.</p>';
+    pageContent += '<p id="new-version" style="color: darkred; font-weight: 700;">A new version of LibreNS++ (<span id="new-version-actual">can\'t determine version number</span>) is available, please check the forum thread.</p>';
+    pageContent += '<p id="current-version" style="color: darkgreen; font-weight: 700;">Your copy of LibreNS++ is up to date!</p>'
     pageContent += '<form id="librensppSettings" onSubmit="return false;">';
     pageContent += '<h2>Updates</h2>';
     pageContent += '<input type="checkbox" id="autoUpdate"><label for="autoUpdate">Check for updates automatically.</label><br>';
@@ -61,7 +62,7 @@ function manageSettings() {
     pageContent += '<input type="checkbox" id="nagPuppets"><label for="nsppTitles">Suppress warning about insecure puppet password storage.</label><br>';
     pageContent += '</form>';
     $("#content").html(pageContent);
-    $("#new-version").hide();
+    $("#new-version, #current-version").hide();
     
     $("#autoUpdate").prop("checked", settings["autoUpdate"]);
     $("#infiniteRMBScroll").prop("checked", settings["infiniteRMBScroll"]);
