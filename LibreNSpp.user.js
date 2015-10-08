@@ -111,6 +111,14 @@ function loadNotifySound() {
 function notifySound() {
     $("audio#librenspp-notification-sound").get(0).play();
 }
+
+function signal() {
+    if (rift) {
+        if ($("#librenspp .belcontent .notificationnumber").length == 0) {
+            $("#librenspp .belcontent").append('<div style="font-weight: 700;" class="notificationnumber">!</div>');
+        }
+    }
+}
 function cosmetic() {
     $(".panelcontent").css("margin-left", "0px")
                       .css("border-top-left-radius", "0px")
@@ -283,12 +291,12 @@ function makeDeletePuppetHandler(name) {
 function setupSettings() {
     if (!rift) {
         $("#banner, #nsbanner").prepend(
-             $('<div style="position: absolute; top: 0; right: 200px; margin: 6px 16px 0 0; z-index: 100;"></div>')
+             $('<div id="librenspp" style="position: absolute; top: 0; right: 200px; margin: 6px 16px 0 0; z-index: 100;"></div>')
              .html('<a href="//www.nationstates.net/page=blank/x-librenspp=settings" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">LibreNS++</a>')
         );
     } else {
         $("#banner .belspacer:not(.belspacermain)").after(
-             $('<div class="bel"></div>')
+             $('<div id="librenspp" class="bel"></div>')
              .html('<div class="belcontent"><a class="bellink" href="//www.nationstates.net/page=blank/x-librenspp=settings"><i class="icon-lightbulb"></i>LIBRENS++</a></div>')
         );
     }
