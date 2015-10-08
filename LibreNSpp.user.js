@@ -22,6 +22,10 @@
 // @match       http://*.nationstates.net/*
 // @match       https://*.nationstates.net/*
 // @copyright   2014-2015, RunasSudo (Yingtong Li)
+// @grant       GM_getValue
+// @grant       GM_setValue
+// @grant       GM_listValues
+// @grant       GM_deleteValue
 
 // ==/UserScript==
 
