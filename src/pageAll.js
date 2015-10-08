@@ -12,6 +12,10 @@ function allPage() {
     setupSettings();
     
     //--------------------
+    //Prepare Sounds
+    loadNotifySound();
+    
+    //--------------------
     //Cosmetic Adjustments
     if (settings["cosmetic"] && rift) {
         cosmetic();

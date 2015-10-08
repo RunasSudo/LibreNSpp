@@ -57,9 +57,6 @@ function regionPage(regionSettings) {
     //Live RMB updates
     if (settings["liveRMBupdate"]) {
         updateRMB();
-        if (settings["soundRMBupdate"]) {
-            loadAudio();
-        }
     }
     
     //--------------------
@@ -97,7 +94,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                     $(post).insertBefore(".rmbrow:first").linkify();
                     rmbOffset += 1;
                     if (settings["soundRMBupdate"]) {
-                        playSound();
+                        notifySound();
                     }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
@@ -122,13 +119,4 @@ function onPostRMB() { //Triggered when submitting a new post to the RMB. Used t
         $("[name='chk']").val(code);
     }
     return true;
-}
-
-function loadAudio() {
-    console.log("Loading audio");
-    $("body").prepend('<audio><source type="audio/ogg" src="data:audio/ogg;base64,m4_include(sound.base64.txt)"></audio>');
-}
-
-function playAudio() {
-    
 }
