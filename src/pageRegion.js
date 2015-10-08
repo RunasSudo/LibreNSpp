@@ -125,7 +125,8 @@ function onPostRMB() { //Triggered when submitting a new post to the RMB. Used t
 }
 
 function loadAudio() {
-    
+    console.log("Loading audio");
+    $("body").prepend('<audio><source type="audio/ogg" src="data:audio/ogg;base64,m4_include(sound.base64.txt)"></audio>');
 }
 
 function playAudio() {
