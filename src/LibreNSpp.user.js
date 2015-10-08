@@ -7,6 +7,7 @@ m4_include(../include/jquery.linkify.min.js)
 m4_include(../include/json2.min.js)
 m4_include(compat.js)
 
+m4_include(cosmetic.js)
 m4_include(pageAll.js)
 m4_include(puppets.js)
 m4_include(settings.js)

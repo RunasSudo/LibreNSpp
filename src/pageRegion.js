@@ -1,26 +1,26 @@
 function regionPage(regionSettings) {
     //--------------------
     //Custom titles
-    if (regionSettings.titles) {
+    if (regionSettings.titles && settings["regionCustomise"]) {
         if (regionSettings.titles.delegate)
             $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
-    } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
-		$.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
-			//nsppTitles is already a JSON object.
-			if (nsppTitles) {
-				if (nsppTitles.delegate_title)
-					$("strong:contains(WA Delegate:)").text(nsppTitles.delegate_title + ":");
-				if (nsppTitles.founder_title)
-					$("strong:contains(Founder:)").text(nsppTitles.founder_title + ":");
-			}
-		});
-	}
+    } else if (settings.nsppTitles && settings["regionCustomise"]) { //Only load if LibreNS++ settings not present.
+        $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
+            //nsppTitles is already a JSON object.
+            if (nsppTitles) {
+                if (nsppTitles.delegate_title)
+                    $("strong:contains(WA Delegate:)").text(nsppTitles.delegate_title + ":");
+                if (nsppTitles.founder_title)
+                    $("strong:contains(Founder:)").text(nsppTitles.founder_title + ":");
+            }
+        });
+    }
 
     //--------------------
     //Embedded IRC
-    if (regionSettings.irc) {
+    if (regionSettings.irc && settings["regionCustomise"] && settings["regionIRC"]) {
         var ircURL = "https:/" + "/kiwiirc.com/client/";
         if (regionSettings.irc.server) {
             ircURL += regionSettings.irc.server + "/";
@@ -32,27 +32,32 @@ function regionPage(regionSettings) {
 
     //--------------------
     //Infinite RMB scroll
-    var rmb = $(".rmbtable2");
-    if (rmb.length > 0) {
-        rmb.children().each(function(i, entry) {
-            $(entry).linkify();
-            rmb.prepend(entry); //Reverse order so newest are at top.
-        });
-        $(".rmbolder").hide(); //GO AWAI!
+    if (settings["infiniteRMBScroll"]) {
+        var rmb = $(".rmbtable2");
+        if (rmb.length > 0) {
+            rmb.children().each(function(i, entry) {
+                $(entry).linkify();
+                rmb.prepend(entry); //Reverse order so newest are at top.
+            });
+            $(".rmbolder").hide(); //GO AWAI!
 
-        $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-
-        //Add scroll detector
-        $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
-            .html("Infinite Scroll!")
-            .insertAfter(rmb.parent());
-
-        infiniteScroll();
+            $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
+            
+            //Add scroll detector
+            $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
+                .html("Infinite Scroll!")
+                .insertAfter(rmb.parent());
+            
+            infiniteScroll();
+        }
     }
+    
 
     //--------------------
     //Live RMB updates
-    updateRMB();
+    if (settings["liveRMBupdate"]) {
+        updateRMB();
+    }
     
     //--------------------
     //Security code updater
