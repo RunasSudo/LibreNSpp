@@ -52,4 +52,25 @@ function allPage() {
             $("#current-version").show();
         }
     }, 'text');
+    
+    //--------------------
+    //Automatically update notices
+    //need to prefill the notices box so we don't trigger it automatically :)
+    $.get("/page=ajax3/a=notices", function(newdata) {
+        $("#noticeboxwrapper .popupboxcontent").html(newdata);
+        updateNotices();
+    });
+}
+
+function updateNotices() { //Triggered at intervals. Looks for notices. 
+    $.get("/page=ajax3/a=notices", function(newdata) {
+        var nbox = $("#noticeboxwrapper .popupboxcontent");
+        var olddata = nbox.html();
+        if (olddata != newdata) {
+            nbox.html(newdata);
+            appendSignal("#noticespopup .belcontent", '!');
+        }
+    });
+
+    setTimeout(updateNotices, 5000);
 }
