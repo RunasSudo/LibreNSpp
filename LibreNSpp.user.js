@@ -115,7 +115,7 @@ function notifySound() {
 }
 
 function signal() {
-    appendSignal("#librenspp .belcontent");
+    appendSignal("#librenspp .belcontent", "!");
 }
 
 function appendSignal(query, content) {
