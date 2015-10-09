@@ -42,14 +42,16 @@ function allPage() {
     
     //--------------------
     //Check for update
-    $.get('https://raw.githubusercontent.com/RunasSudo/LibreNSpp/master/version', function(serverVersion) {
-        if (version != serverVersion) {
-            latestVersion = serverVersion;
-            signal();
-            $("#new-version").show();
-            $("#new-version-actual").text(latestVersion);
-        } else {
-            $("#current-version").show();
-        }
-    }, 'text');
+    if (settings["autoUpdate"]) {
+        $.get('https://raw.githubusercontent.com/RunasSudo/LibreNSpp/master/version', function(serverVersion) {
+            if (version != serverVersion) {
+                latestVersion = serverVersion;
+                signal();
+                $("#new-version").show();
+                $("#new-version-actual").text(latestVersion);
+            } else {
+                $("#current-version").show();
+            }
+        }, 'text');
+    }
 }
