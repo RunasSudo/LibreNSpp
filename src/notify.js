@@ -1,5 +1,5 @@
 function loadNotifySound() {
-    $("body").prepend('<audio id="librenspp-notification-sound"><source type="audio/ogg" src="data:audio/ogg;base64,m4_include(sound.base64.txt)"></audio>');
+    $("body").prepend('<audio id="librenspp-notification-sound"><source type="audio/ogg" src="data:audio/ogg;base64,asset(notify.ogg)"></audio>');
 }
 
 function notifySound() {
@@ -7,9 +7,14 @@ function notifySound() {
 }
 
 function signal() {
+    appendSignal("#librenspp .belcontent");
+}
+
+function appendSignal(query, content) {
     if (rift) {
-        if ($("#librenspp .belcontent .notificationnumber").length == 0) {
-            $("#librenspp .belcontent").append('<div style="font-weight: 700;" class="notificationnumber">!</div>');
+        if ($(query + " .notificationnumber").length == 0) {
+            $(query).append('<div style="font-weight: 700;" class="notificationnumber">' + content + '</div>');
         }
+        $("query .notificationnumber").show();
     }
 }
