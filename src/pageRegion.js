@@ -103,7 +103,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
         });
     });
 
-    setTimeout(updateRMB, 5000);
+    setTimeout(updateRMB, settings["updateSpeed"]);
 }
 
 function onPostRMB() { //Triggered when submitting a new post to the RMB. Used to refresh the security code.
