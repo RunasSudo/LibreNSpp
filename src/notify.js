@@ -13,8 +13,8 @@ function signal() {
 function appendSignal(query, content) {
     if (rift) {
         if ($(query + " .notificationnumber").length == 0) {
-            $(query).append('<div style="font-weight: 700;" class="notificationnumber">' + content + '</div>');
+            $(query).append('<div style="font-weight: 700;" class="notificationnumber"></div>');
         }
-        $("query .notificationnumber").show();
+        $(query + ".notificationnumber").html(content).show();
     }
 }
