@@ -93,6 +93,9 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                 if ($("div#" + post.id).length == 0) { //It's a new post!
                     $(post).insertBefore(".rmbrow:first").linkify();
                     rmbOffset += 1;
+                    if (settings["soundRMBupdate"]) {
+                        notifySound();
+                    }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
                 }
@@ -100,7 +103,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
         });
     });
 
-    setTimeout(updateRMB, 5000);
+    setTimeout(updateRMB, settings["updateSpeed"]);
 }
 
 function onPostRMB() { //Triggered when submitting a new post to the RMB. Used to refresh the security code.
