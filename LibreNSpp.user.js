@@ -115,16 +115,21 @@ function notifySound() {
 }
 
 function signal() {
-    appendSignal("#librenspp .belcontent", "!");
+    appendSignal("#librenspp", "!");
 }
 
 function appendSignal(query, content) {
     if (rift) {
-        if ($(query + " .notificationnumber").length == 0) {
+        if ($(query + " .belcontent .notificationnumber").length == 0) {
             $(query).append('<div style="font-weight: 700;" class="notificationnumber"></div>');
         }
-        $(query + " .notificationnumber").html(content).show();
-    }
+        $(query + " .belcontent .notificationnumber").html(content).show();
+    } else {
+		if ($(query + " a .notificationnumber2").length == 0) {
+			$(query + " a").append(' <span style="color: #f44336;" class="notificationnumber2"></span>');
+		}
+		$(query + " a .notificationnumber2").html("(" + content + ")").show();
+	}
 }
 
 function cosmetic() {
@@ -179,7 +184,6 @@ function allPage() {
     //Sidebar
     $(".panelcontent .menu li:nth-child(5) ul.popoutmenu").append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=subscribed"><i class="icon-radar"></i>Subscribed</a></li>')
                                                           .append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=bookmarks"><i class="icon-book"></i>Bookmarked</a></li>');
-    // (to fix the indenting, leave this here)
     
     //--------------------
     //Check for update
@@ -196,6 +200,7 @@ function allPage() {
         }, 'text');
     }
 }
+
 function setupPuppets() {
     if (!rift) {
         $("#banner, #nsbanner").prepend(

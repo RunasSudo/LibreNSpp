@@ -7,14 +7,19 @@ function notifySound() {
 }
 
 function signal() {
-    appendSignal("#librenspp .belcontent", "!");
+    appendSignal("#librenspp", "!");
 }
 
 function appendSignal(query, content) {
     if (rift) {
-        if ($(query + " .notificationnumber").length == 0) {
+        if ($(query + " .belcontent .notificationnumber").length == 0) {
             $(query).append('<div style="font-weight: 700;" class="notificationnumber"></div>');
         }
-        $(query + " .notificationnumber").html(content).show();
+        $(query + " .belcontent .notificationnumber").html(content).show();
+    } else {
+        if ($(query + " a .notificationnumber2").length == 0) {
+            $(query + " a").append(' <span style="color: #f44336;" class="notificationnumber2"></span>');
+        }
+        $(query + " a .notificationnumber2").html("(" + content + ")").show();
     }
 }
