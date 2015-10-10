@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #Prepare assets for baking
-echo Clearing assets/baked
-rm assets/baked/*
+echo Preparing assets for baking
+mkdir assets/baked 2>/dev/null
 for file in $(ls assets/normal)
 do
     echo Encoding assets/normal/$file to assets/baked/$file
