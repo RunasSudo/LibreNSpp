@@ -29,3 +29,7 @@ On file formats
 All file formats used in LibreNS++ must, at a minimum, be usable in both Chrome and Firefox, on Windows, Mac and Linux.
 The recommended format for audio files is OGG Theora (MIME `audio/ogg`, usual extension `.ogg`).
 The recommended format for images is PNG (MIME `image/png`, usual extension `.png`).
+
+Code Style
+==========
+I'm not too fussed about code style, but I would appreciate it if you tried to be consistent with the existing code style. On my esoteric application of quotation marks, double quotation marks have been used for ordinary JavaScript strings, while single quotation marks have been used for HTML code as strings (so double quotes can be used in HTML).

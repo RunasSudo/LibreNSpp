@@ -69,7 +69,7 @@ function manageSettings() {
     pageContent += '<br>';
     pageContent += '<h2>Miscellaneous</h2>';
     pageContent += '<button id="testDing">Test the notification sound</button><br>';
-    pageContent += '&nbsp;&nbsp;&nbsp;<a href="http://www.freesound.org/people/Corsica_S/sounds/91926/">The notification sound is from here (CC-BY).</a><br>';
+    pageContent += '&nbsp;&nbsp;&nbsp;<a href="http://www.freesound.org/people/Corsica_S/sounds/91926/">"ding.wav" by Corsica_S. Used under the CC BY 3.0 licence.</a><br>';
     pageContent += '<label for="updateSpeed">Set a custom frequency to update automatically-updating parts of NS (milliseconds):</label> <input type="number" id="updateSpeed"><br>';
     pageContent += '&nbsp;&nbsp;&nbsp;<span style="color: darkred;" id="updateSpeedWarning">You are solely responsible for any consequences of decreasing this limit.</span>';
     pageContent += '<br>';

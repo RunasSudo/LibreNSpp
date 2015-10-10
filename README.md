@@ -25,3 +25,7 @@ Folder structure
   * src/assets/normal/: The assets in their typical form.
   * src/assets/baked/: The assets after being encoded by build.sh.
 * include/: JavaScript libraries automatically bundled with LibreNS++.
+
+Third-party assets used
+-----------
+* notify.ogg: The notification ding. ["ding.wav" by Corsica_S](http://www.freesound.org/people/Corsica_S/sounds/91926/). Used under the [CC BY 3.0 licence](http://creativecommons.org/licenses/by/3.0/).
