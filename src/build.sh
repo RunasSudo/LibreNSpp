@@ -2,11 +2,11 @@
 
 #Prepare assets for baking
 echo Clearing assets/baked
-rm -rf assets/baked/*
+rm assets/baked/*
 for file in $(ls assets/normal)
 do
     echo Encoding assets/normal/$file to assets/baked/$file
-    base64 assets/normal/$file | tr -d '\012\015' > assets/baked/$file
+    base64 -w 0 assets/normal/$file > assets/baked/$file
 done
 
 #Execute m4
