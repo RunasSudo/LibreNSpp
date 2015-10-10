@@ -15,6 +15,6 @@ function appendSignal(query, content) {
         if ($(query + " .notificationnumber").length == 0) {
             $(query).append('<div style="font-weight: 700;" class="notificationnumber"></div>');
         }
-        $(query + ".notificationnumber").html(content).show();
+        $(query + " .notificationnumber").html(content).show();
     }
 }

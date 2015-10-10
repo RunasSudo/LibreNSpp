@@ -17,7 +17,7 @@
 // ==UserScript==
 // @name        LibreNS++
 // @namespace   https://github.com/RunasSudo/LibreNSpp
-// @version     0.0a18
+// @version     0.1.0
 // @description Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match       http://*.nationstates.net/*
 // @match       https://*.nationstates.net/*
@@ -29,7 +29,7 @@
 
 // ==/UserScript==
 
-var version = "0.0a18";
+var version = "0.1.0";
 
 
 
@@ -123,9 +123,10 @@ function appendSignal(query, content) {
         if ($(query + " .notificationnumber").length == 0) {
             $(query).append('<div style="font-weight: 700;" class="notificationnumber"></div>');
         }
-        $(query + ".notificationnumber").html(content).show();
+        $(query + " .notificationnumber").html(content).show();
     }
 }
+
 function cosmetic() {
     $(".panelcontent").css("margin-left", "0px")
                       .css("border-top-left-radius", "0px")
