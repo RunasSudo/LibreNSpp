@@ -356,9 +356,9 @@ function loadSettings() {
     loadSettingBool("cosmetic", true);
     loadSettingBool("floatingSidebar", true);
     //NationStates++ Compatibility
-    loadSettingBool("nsppTitles", true);
-    loadSettingBool("nsppNewspaper", true);
-    loadSettingBool("nsppIRC", true);
+    loadSettingBool("nsppTitles", false);
+    loadSettingBool("nsppNewspaper", false);
+    loadSettingBool("nsppIRC", false);
     //Miscellaneous
     loadSettingNumber("updateSpeed", 5000);
     //Danger!
@@ -459,12 +459,12 @@ function manageSettings() {
 function regionPage(regionSettings) {
     //--------------------
     //Custom titles
-    if (regionSettings.titles && settings["regionCustomise"]) {
+    if (settings.regionCustomise && regionSettings.titles) {
         if (regionSettings.titles.delegate)
             $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
-    } else if (settings.nsppTitles && settings["regionCustomise"]) { //Only load if LibreNS++ settings not present.
+    } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
         $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
             //nsppTitles is already a JSON object.
             if (nsppTitles) {
@@ -475,10 +475,25 @@ function regionPage(regionSettings) {
             }
         });
     }
+    
+    //--------------------
+    //NS++ newspapers
+    if (settings.nsppNewspaper) {
+        $.getJSON("https:/" + "/nationstatesplusplus.net/api/newspaper/region/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppNewspaper) {
+            if (nsppNewspaper) {
+                if (nsppNewspaper.newspaper_id) {
+                    if (!nsppNewspaper.title)
+                        nsppNewspaper.title = "Click Here";
+                    
+                    $('<p><strong>Newspaper:</strong> <a href="https://nationstatesplusplus.net/newspaper?id=' + nsppNewspaper.newspaper_id + '">' + nsppNewspaper.title + '</a></p>').insertAfter($("strong:contains(Founder:)").parent());
+                }
+            }
+        });
+    }
 
     //--------------------
     //Embedded IRC
-    if (regionSettings.irc && settings["regionCustomise"] && settings["regionIRC"]) {
+    if (settings.regionCustomise && settings.regionIRC && regionSettings.irc) {
         var ircURL = "https:/" + "/kiwiirc.com/client/";
         if (regionSettings.irc.server) {
             ircURL += regionSettings.irc.server + "/";
@@ -486,6 +501,21 @@ function regionPage(regionSettings) {
                 ircURL += regionSettings.irc.channel;
             $('<iframe src="' + ircURL + '" style="border:0; width:100%; height:450px;"></iframe><div class="hzln"></div>').insertBefore($("h2:contains(Today's World Census Report)"));
         }
+    } else if (settings.nsppIRC) {
+        $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/irc/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppIRC) {
+            if (nsppIRC) {
+                var ircURL = "https:/" + "/kiwiirc.com/client/";
+                if (nsppIRC.irc_network) {
+                    ircURL += nsppIRC.irc_network;
+                    if (nsppIRC.irc_port)
+                        ircURL += nsppIRC.irc_port;
+                    ircURL += "/";
+                    if (nsppIRC.irc_channel)
+                        ircURL += nsppIRC.irc_channel;
+                    $('<iframe src="' + ircURL + '" style="border:0; width:100%; height:450px;"></iframe><div class="hzln"></div>').insertBefore($("h2:contains(Today's World Census Report)"));
+                }
+            }
+        });
     }
 
     //--------------------
@@ -578,6 +608,7 @@ function onPostRMB() { //Triggered when submitting a new post to the RMB. Used t
     }
     return true;
 }
+
 function dispatchEditor() {
     var regionSettings = {};
     if ($("textarea[name=\"message\"]").val().split("\n").length >= 3)
