@@ -17,7 +17,7 @@
 // ==UserScript==
 // @name        LibreNS++
 // @namespace   https://github.com/RunasSudo/LibreNSpp
-// @version     0.0a18
+// @version     0.1.0
 // @description Free as in 'free speech', 'free beer' and 'free from tyranny'.
 // @match       http://*.nationstates.net/*
 // @match       https://*.nationstates.net/*
@@ -29,7 +29,9 @@
 
 // ==/UserScript==
 
-var version = "0.0a18";
+var version = "0.1.0";
+
+
 
 
 /*! jQuery v2.1.1 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */
@@ -67,7 +69,8 @@ function LS_getValueBool(key, def) { // Comparing strings and booleans is hard :
     if (localStorage.getItem(key) == null) {
         return def;
     } else {
-        return localStorage.getItem(key) == "true";
+        return localStorage.getItem(key) == "true"
+            || localStorage.getItem(key) === true;
     }
 }
 
@@ -91,7 +94,8 @@ function GM_getValueBool(key, def) {
     if (GM_getValue(key) == undefined) {
         return def;
     } else {
-        return GM_getValue(key) == "true";
+        return GM_getValue(key) == "true"
+            || GM_getValue(key) === true;
     }
 }
 
@@ -102,11 +106,38 @@ if (typeof GM_deleteValue=="function") { NS_deleteValue = GM_deleteValue; consol
 if (typeof GM_listValues=="function") { NS_listValues = GM_listValues; console.log("Using GM_listValues"); } else { NS_listValues = LS_listValues; console.log("Using LS_listValues"); };
 
 
+function loadNotifySound() {
+    $("body").prepend('<audio id="librenspp-notification-sound"><source type="audio/ogg" src="data:audio/ogg;base64,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"></audio>');
+}
+
+function notifySound() {
+    $("audio#librenspp-notification-sound").get(0).play();
+}
+
+function signal() {
+    appendSignal("#librenspp", "!");
+}
+
+function appendSignal(query, content) {
+    if (rift) {
+        if ($(query + " .belcontent .notificationnumber").length == 0) {
+            $(query).append('<div style="font-weight: 700;" class="notificationnumber"></div>');
+        }
+        $(query + " .belcontent .notificationnumber").html(content).show();
+    } else {
+        if ($(query + " a .notificationnumber2").length == 0) {
+            $(query + " a").append(' <span style="color: #f44336;" class="notificationnumber2"></span>');
+        }
+        $(query + " a .notificationnumber2").html("(" + content + ")").show();
+    }
+}
+
 function cosmetic() {
     $(".panelcontent").css("margin-left", "0px")
                       .css("border-top-left-radius", "0px")
                       .css("border-bottom-left-radius", "0px");
-    $(".accessiblitylink").hide(); // This is a typo in NS, don't change it unless NS changes it
+    $("#accessiblitylink").hide(); // This is a typo in NS, don't change it unless NS changes it
+    $("#nationcover").css("box-shadow", "0px 4px 4px 0px rgba(0, 0, 0, 0.5)");
 }
 
 // This messes with the footer a little bit on pages that are shorter than your screen height.
@@ -125,6 +156,10 @@ function allPage() {
     //--------------------
     //Settings Link
     setupSettings();
+    
+    //--------------------
+    //Prepare Sounds
+    loadNotifySound();
     
     //--------------------
     //Cosmetic Adjustments
@@ -149,6 +184,21 @@ function allPage() {
     //Sidebar
     $(".panelcontent .menu li:nth-child(5) ul.popoutmenu").append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=subscribed"><i class="icon-radar"></i>Subscribed</a></li>')
                                                           .append('<li><a href="//forum.nationstates.net/ucp.php?i=main&mode=bookmarks"><i class="icon-book"></i>Bookmarked</a></li>');
+    
+    //--------------------
+    //Check for update
+    if (settings["autoUpdate"]) {
+        $.get('https://raw.githubusercontent.com/RunasSudo/LibreNSpp/master/version', function(serverVersion) {
+            if (version != serverVersion) {
+                latestVersion = serverVersion;
+                signal();
+                $("#new-version").show();
+                $("#new-version-actual").text(latestVersion);
+            } else {
+                $("#current-version").show();
+            }
+        }, 'text');
+    }
 }
 
 function setupPuppets() {
@@ -270,12 +320,12 @@ function makeDeletePuppetHandler(name) {
 function setupSettings() {
     if (!rift) {
         $("#banner, #nsbanner").prepend(
-             $('<div style="position: absolute; top: 0; right: 200px; margin: 6px 16px 0 0; z-index: 100;"></div>')
+             $('<div id="librenspp" style="position: absolute; top: 0; right: 200px; margin: 6px 16px 0 0; z-index: 100;"></div>')
              .html('<a href="//www.nationstates.net/page=blank/x-librenspp=settings" style="color: white; font-weight: bold; font-size: 8pt; padding: 2px 8px 2px 8px; background: black; background-color: rgba(0,0,0,0.2); border-radius: 8px; zoom: 1;">LibreNS++</a>')
         );
     } else {
         $("#banner .belspacer:not(.belspacermain)").after(
-             $('<div class="bel"></div>')
+             $('<div id="librenspp" class="bel"></div>')
              .html('<div class="belcontent"><a class="bellink" href="//www.nationstates.net/page=blank/x-librenspp=settings"><i class="icon-lightbulb"></i>LIBRENS++</a></div>')
         );
     }
@@ -285,15 +335,33 @@ function loadSettingBool(setting, def) {
     settings[setting] = NS_getValueBool("setting_" + setting, def);
 }
 
+function loadSettingText(setting, def) {
+    settings[setting] = String(NS_getValue("setting_" + setting, def));
+}
+
+function loadSettingNumber(setting, def) {
+    settings[setting] = Number(NS_getValue("setting_" + setting, def));
+}
+
 function loadSettings() {
+    //Updates
+    loadSettingBool("autoUpdate", true);
+    //LibreNS++ Features
     loadSettingBool("infiniteRMBScroll", true);
     loadSettingBool("liveRMBupdate", true);
+    loadSettingBool("soundRMBupdate", false);
     loadSettingBool("regionCustomise", true);
     loadSettingBool("regionIRC", true);
     loadSettingBool("latestForum", true);
     loadSettingBool("cosmetic", true);
     loadSettingBool("floatingSidebar", true);
-    loadSettingBool("nsppTitles", true);
+    //NationStates++ Compatibility
+    loadSettingBool("nsppTitles", false);
+    loadSettingBool("nsppNewspaper", false);
+    loadSettingBool("nsppIRC", false);
+    //Miscellaneous
+    loadSettingNumber("updateSpeed", 5000);
+    //Danger!
     loadSettingBool("nagPuppets", false);
     
     return settings;
@@ -304,12 +372,15 @@ function manageSettings() {
     pageContent += '<p style="font-size: 0.9em;">LibreNS++ version ' + version + '. <a href="https://forum.nationstates.net/viewtopic.php?f=15&t=304199">Forum</a>, <a href="https://github.com/RunasSudo/LibreNSpp">GitHub</a>, <a href="https://www.nationstates.net/nation=south_jarvis">South Jarvis (creator)</a>.</p>';
     pageContent += '<form id="librensppSettings" onSubmit="return false;">';
     pageContent += '<h2>Updates</h2>';
-    pageContent += '<input type="checkbox" id="autoUpdate" disabled><label for="autoUpdate">Check for updates automatically.</label><br>';
-    pageContent += '<input type="button" id="updateNow" value="Check now" disabled> <span id="updateStatus">No new updates. Last checked: never.</span><br>';
+    pageContent += '<p id="new-version" style="color: darkred; font-weight: 700;">A new version of LibreNS++ (<span id="new-version-actual">can\'t determine version number</span>) is available, please check the forum thread.</p>';
+    pageContent += '<p id="current-version" style="color: darkgreen; font-weight: 700;">Your copy of LibreNS++ is up to date!</p>'
+    pageContent += '<input type="checkbox" id="autoUpdate"><label for="autoUpdate">Check for updates automatically.</label><br>';
     pageContent += '<br>';
     pageContent += '<h2>LibreNS++ Features</h2>';
     pageContent += '<input type="checkbox" id="infiniteRMBScroll"><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
     pageContent += '<input type="checkbox" id="liveRMBupdate"><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
+    pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="soundRMBupdate"><label for="soundRMBupdate">Play the notification sound when a new RMB post arrives.</label><br>';
+    pageContent += '<audio>&nbsp;&nbsp;&nbsp;If you can see this text, the notification sound is not supported by your browser.<br></audio>';
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
     pageContent += '<input type="checkbox" id="regionCustomise"><label for="regionCustomise">Enable regional customisation.</label><br>';
     pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="regionIRC"><label for="regionIRC">Enable regional IRC.</label><br>';
@@ -319,41 +390,81 @@ function manageSettings() {
     pageContent += '<br>';
     pageContent += '<h2>NationStates++ Compatibility</h2>';
     pageContent += '<input type="checkbox" id="nsppTitles"><label for="nsppTitles">Enable NationStates++ regional titles.</label><br>';
-    pageContent += '<input type="checkbox" id="nsppNewspaper" disabled><label for="nsppNewspaper">Enable NationStates++ regional newspapers.</label><br>';
-    pageContent += '<input type="checkbox" id="nsppIRC" disabled><label for="nsppIRC">Enable NationStates++ regional IRC.</label><br>';
+    pageContent += '<input type="checkbox" id="nsppNewspaper"><label for="nsppNewspaper">Enable NationStates++ regional newspapers.</label><br>';
+    pageContent += '<input type="checkbox" id="nsppIRC"><label for="nsppIRC">Enable NationStates++ regional IRC.</label><br>';
+    pageContent += '<br>';
+    pageContent += '<h2>Miscellaneous</h2>';
+    pageContent += '<button id="testDing">Test the notification sound</button><br>';
+    pageContent += '&nbsp;&nbsp;&nbsp;<a href="http://www.freesound.org/people/Corsica_S/sounds/91926/">"ding.wav" by Corsica_S. Used under the CC BY 3.0 licence.</a><br>';
+    pageContent += '<label for="updateSpeed">Set a custom frequency to update automatically-updating parts of NS (milliseconds):</label> <input type="number" id="updateSpeed"><br>';
+    pageContent += '&nbsp;&nbsp;&nbsp;<span style="color: darkred;" id="updateSpeedWarning">You are solely responsible for any consequences of decreasing this limit.</span>';
     pageContent += '<br>';
     pageContent += '<h2>Use at your own risk!</h2>';
     pageContent += '<input type="checkbox" id="nagPuppets"><label for="nsppTitles">Suppress warning about insecure puppet password storage.</label><br>';
     pageContent += '</form>';
     $("#content").html(pageContent);
+    $("#new-version, #current-version, #updateSpeedWarning").hide();
+    if (settings["updateSpeed"] < 5000) {
+        $("#updateSpeedWarning").show();
+    }
     
-    $("#infiniteRMBScroll").prop("checked", settings["infiniteRMBScroll"]);
-    $("#liveRMBupdate").prop("checked", settings["liveRMBupdate"]);
-    $("#regionCustomise").prop("checked", settings["regionCustomise"]);
-    $("#regionIRC").prop("checked", settings["regionIRC"]);
-    $("#latestForum").prop("checked", settings["latestForum"]);
-    $("#cosmetic").prop("checked", settings["cosmetic"]);
-    $("#floatingSidebar").prop("checked", settings["floatingSidebar"]);
-    $("#nsppTitles").prop("checked", settings["nsppTitles"]);
-    $("#nagPuppets").prop("checked", settings["nagPuppets"]);
+    function settingCheckbox(setting) {
+        $("#" + setting).prop("checked", settings[setting]);
+    }
+    
+    //Updates
+    settingCheckbox("autoUpdate");
+    //LibreNS++ Features
+    settingCheckbox("infiniteRMBScroll");
+    settingCheckbox("liveRMBupdate");
+    settingCheckbox("soundRMBupdate");
+    settingCheckbox("regionCustomise");
+    settingCheckbox("regionIRC");
+    settingCheckbox("latestForum");
+    settingCheckbox("cosmetic");
+    settingCheckbox("floatingSidebar");
+    //NationStates++ Compatibility
+    settingCheckbox("nsppTitles");
+    settingCheckbox("nsppNewspaper");
+    settingCheckbox("nsppIRC");
+    //Miscellaneous
+    $("#updateSpeed").val(settings["updateSpeed"]);
+    //Danger!
+    settingCheckbox("nagPuppets");
     
     $("#cosmetic, #floatingSidebar").prop("disabled", rift ? undefined : "needs Rift");
     
     $("#librensppSettings input[type='checkbox']").change(function() {
         NS_setValue("setting_" + this.id, this.checked);
-        // note for future: if any settings that affect the settings page are added, they won't take effect until reload (probably for the better)
     });
+    
+    $("#librensppSettings input[type='number'], #librensppSettings input[type='text']").change(function() {
+        NS_setValue("setting_" + this.id, this.value);
+    });
+    
+    //-------------------------
+    //Setting-specific handlers
+    
+    $("#updateSpeed").change(function() {
+        if (Number($("#updateSpeed").val()) < 5000) {
+            $("#updateSpeedWarning").show();
+        } else {
+            $("#updateSpeedWarning").hide();
+        }
+    });
+    
+    $("#testDing").click(notifySound);
 }
 
 function regionPage(regionSettings) {
     //--------------------
     //Custom titles
-    if (regionSettings.titles && settings["regionCustomise"]) {
+    if (settings.regionCustomise && regionSettings.titles) {
         if (regionSettings.titles.delegate)
             $("strong:contains(WA Delegate:)").text(regionSettings.titles.delegate + ":");
         if (regionSettings.titles.founder)
             $("strong:contains(Founder:)").text(regionSettings.titles.founder + ":");
-    } else if (settings.nsppTitles && settings["regionCustomise"]) { //Only load if LibreNS++ settings not present.
+    } else if (settings.nsppTitles) { //Only load if LibreNS++ settings not present.
         $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/title/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppTitles) {
             //nsppTitles is already a JSON object.
             if (nsppTitles) {
@@ -364,10 +475,25 @@ function regionPage(regionSettings) {
             }
         });
     }
+    
+    //--------------------
+    //NS++ newspapers
+    if (settings.nsppNewspaper) {
+        $.getJSON("https:/" + "/nationstatesplusplus.net/api/newspaper/region/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppNewspaper) {
+            if (nsppNewspaper) {
+                if (nsppNewspaper.newspaper_id) {
+                    if (!nsppNewspaper.title)
+                        nsppNewspaper.title = "Click Here";
+                    
+                    $('<p><strong>Newspaper:</strong> <a href="https://nationstatesplusplus.net/newspaper?id=' + nsppNewspaper.newspaper_id + '">' + nsppNewspaper.title + '</a></p>').insertAfter($("strong:contains(Founder:)").parent());
+                }
+            }
+        });
+    }
 
     //--------------------
     //Embedded IRC
-    if (regionSettings.irc && settings["regionCustomise"] && settings["regionIRC"]) {
+    if (settings.regionCustomise && settings.regionIRC && regionSettings.irc) {
         var ircURL = "https:/" + "/kiwiirc.com/client/";
         if (regionSettings.irc.server) {
             ircURL += regionSettings.irc.server + "/";
@@ -375,6 +501,21 @@ function regionPage(regionSettings) {
                 ircURL += regionSettings.irc.channel;
             $('<iframe src="' + ircURL + '" style="border:0; width:100%; height:450px;"></iframe><div class="hzln"></div>').insertBefore($("h2:contains(Today's World Census Report)"));
         }
+    } else if (settings.nsppIRC) {
+        $.getJSON("https:/" + "/nationstatesplusplus.net/api/region/irc/?region=" + window.location.pathname.substring(window.location.pathname.indexOf("/region=") + 8), function(nsppIRC) {
+            if (nsppIRC) {
+                var ircURL = "https:/" + "/kiwiirc.com/client/";
+                if (nsppIRC.irc_network) {
+                    ircURL += nsppIRC.irc_network;
+                    if (nsppIRC.irc_port)
+                        ircURL += nsppIRC.irc_port;
+                    ircURL += "/";
+                    if (nsppIRC.irc_channel)
+                        ircURL += nsppIRC.irc_channel;
+                    $('<iframe src="' + ircURL + '" style="border:0; width:100%; height:450px;"></iframe><div class="hzln"></div>').insertBefore($("h2:contains(Today's World Census Report)"));
+                }
+            }
+        });
     }
 
     //--------------------
@@ -440,6 +581,9 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                 if ($("div#" + post.id).length == 0) { //It's a new post!
                     $(post).insertBefore(".rmbrow:first").linkify();
                     rmbOffset += 1;
+                    if (settings["soundRMBupdate"]) {
+                        notifySound();
+                    }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
                 }
@@ -447,7 +591,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
         });
     });
 
-    setTimeout(updateRMB, 5000);
+    setTimeout(updateRMB, settings["updateSpeed"]);
 }
 
 function onPostRMB() { //Triggered when submitting a new post to the RMB. Used to refresh the security code.
@@ -494,6 +638,7 @@ function updateDispatchJSON() {
 }
 
 var rift = false; // this is set in run(), assume false to be safer
+var latestversion = version;
 
 //====================
 //Basic Code
