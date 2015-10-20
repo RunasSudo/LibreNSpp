@@ -31,4 +31,4 @@
 
 var version = "m4_include(../version)";
 
-m4_define(`asset', `m4_include(assets/baked/$1)')
+m4_define(`asset', `m4_esyscmd(base64 -w 0 "assets/$1")')

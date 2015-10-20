@@ -11,7 +11,7 @@ Asset System
 ============
 If you need to include an asset, such as a sound or image file,
 the recommended way to do so is
-to place the asset file, in its normal format, in `src/assets/normal`
+to place the asset file, in its normal format, in `src/assets`
 and access it using the syntax `asset(yourfilename.bin)`.
 The build script will take care of the rest.
 Please be aware that using this method, your 'call' to `asset()`
