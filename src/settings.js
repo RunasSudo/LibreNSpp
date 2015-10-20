@@ -37,9 +37,9 @@ function loadSettings() {
     loadSettingBool("cosmetic", true);
     loadSettingBool("floatingSidebar", true);
     //NationStates++ Compatibility
-    loadSettingBool("nsppTitles", true);
-    loadSettingBool("nsppNewspaper", true);
-    loadSettingBool("nsppIRC", true);
+    loadSettingBool("nsppTitles", false);
+    loadSettingBool("nsppNewspaper", false);
+    loadSettingBool("nsppIRC", false);
     //Miscellaneous
     loadSettingNumber("updateSpeed", 5000);
     //Danger!
