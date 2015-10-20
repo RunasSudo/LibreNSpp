@@ -25,7 +25,9 @@ function loadSettingNumber(setting, def) {
 }
 
 function loadSettings() {
+    //Updates
     loadSettingBool("autoUpdate", true);
+    //LibreNS++ Features
     loadSettingBool("infiniteRMBScroll", true);
     loadSettingBool("liveRMBupdate", true);
     loadSettingBool("soundRMBupdate", false);
@@ -34,8 +36,13 @@ function loadSettings() {
     loadSettingBool("latestForum", true);
     loadSettingBool("cosmetic", true);
     loadSettingBool("floatingSidebar", true);
+    //NationStates++ Compatibility
     loadSettingBool("nsppTitles", true);
+    loadSettingBool("nsppNewspaper", true);
+    loadSettingBool("nsppIRC", true);
+    //Miscellaneous
     loadSettingNumber("updateSpeed", 5000);
+    //Danger!
     loadSettingBool("nagPuppets", false);
     
     return settings;
@@ -64,8 +71,8 @@ function manageSettings() {
     pageContent += '<br>';
     pageContent += '<h2>NationStates++ Compatibility</h2>';
     pageContent += '<input type="checkbox" id="nsppTitles"><label for="nsppTitles">Enable NationStates++ regional titles.</label><br>';
-    pageContent += '<input type="checkbox" id="nsppNewspaper" disabled><label for="nsppNewspaper">Enable NationStates++ regional newspapers.</label><br>';
-    pageContent += '<input type="checkbox" id="nsppIRC" disabled><label for="nsppIRC">Enable NationStates++ regional IRC.</label><br>';
+    pageContent += '<input type="checkbox" id="nsppNewspaper"><label for="nsppNewspaper">Enable NationStates++ regional newspapers.</label><br>';
+    pageContent += '<input type="checkbox" id="nsppIRC"><label for="nsppIRC">Enable NationStates++ regional IRC.</label><br>';
     pageContent += '<br>';
     pageContent += '<h2>Miscellaneous</h2>';
     pageContent += '<button id="testDing">Test the notification sound</button><br>';
@@ -82,18 +89,29 @@ function manageSettings() {
         $("#updateSpeedWarning").show();
     }
     
-    $("#autoUpdate").prop("checked", settings["autoUpdate"]);
-    $("#infiniteRMBScroll").prop("checked", settings["infiniteRMBScroll"]);
-    $("#liveRMBupdate").prop("checked", settings["liveRMBupdate"]);
-    $("#soundRMBupdate").prop("checked", settings["soundRMBupdate"]);
-    $("#regionCustomise").prop("checked", settings["regionCustomise"]);
-    $("#regionIRC").prop("checked", settings["regionIRC"]);
-    $("#latestForum").prop("checked", settings["latestForum"]);
-    $("#cosmetic").prop("checked", settings["cosmetic"]);
-    $("#floatingSidebar").prop("checked", settings["floatingSidebar"]);
-    $("#nsppTitles").prop("checked", settings["nsppTitles"]);
+    function settingCheckbox(setting) {
+        $("#" + setting).prop("checked", settings[setting]);
+    }
+    
+    //Updates
+    settingCheckbox("autoUpdate");
+    //LibreNS++ Features
+    settingCheckbox("infiniteRMBScroll");
+    settingCheckbox("liveRMBupdate");
+    settingCheckbox("soundRMBupdate");
+    settingCheckbox("regionCustomise");
+    settingCheckbox("regionIRC");
+    settingCheckbox("latestForum");
+    settingCheckbox("cosmetic");
+    settingCheckbox("floatingSidebar");
+    //NationStates++ Compatibility
+    settingCheckbox("nsppTitles");
+    settingCheckbox("nsppNewspaper");
+    settingCheckbox("nsppIRC");
+    //Miscellaneous
     $("#updateSpeed").val(settings["updateSpeed"]);
-    $("#nagPuppets").prop("checked", settings["nagPuppets"]);
+    //Danger!
+    settingCheckbox("nagPuppets");
     
     $("#cosmetic, #floatingSidebar").prop("disabled", rift ? undefined : "needs Rift");
     
@@ -104,6 +122,9 @@ function manageSettings() {
     $("#librensppSettings input[type='number'], #librensppSettings input[type='text']").change(function() {
         NS_setValue("setting_" + this.id, this.value);
     });
+    
+    //-------------------------
+    //Setting-specific handlers
     
     $("#updateSpeed").change(function() {
         if (Number($("#updateSpeed").val()) < 5000) {
