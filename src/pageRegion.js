@@ -127,7 +127,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                         notifySound();
                     }
                     if (settings["desktopRMBupdate"]) {
-                        var poster = $(post).find("a.nlink span").text();
+                        var poster = $(post).find(".rmbauthor2 a.nlink span").text();
                         var content = $(post).find(".rmbmsg2").html()
                                        .replace(/<fieldset .*<\/fieldset>/g, "")
                                        .replace(/<div class="rmbnewlabel">New<\/div>/g, "")
