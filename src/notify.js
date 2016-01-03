@@ -32,7 +32,7 @@ function appendSignal(query, content) {
 // Desktop notification API
 function notifyDesktop(title, text) {
   function give() {
-    Notification(title, {body: text});
+    new Notification(title, {body: text});
   }
 
   if (!("Notification") in window) {
