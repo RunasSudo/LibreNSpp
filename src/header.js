@@ -30,3 +30,5 @@
 // ==/UserScript==
 
 var version = "m4_include(../version)";
+
+m4_define(`asset', `m4_esyscmd(base64 -w 0 "assets/$1")')
