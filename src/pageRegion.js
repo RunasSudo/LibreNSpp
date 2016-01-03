@@ -128,7 +128,8 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                     }
                     if (settings["desktopRMBupdate"]) {
                         var poster = $(post).find("a.nlink span").text();
-                        notifyDesktop("RMB post from " + poster, "");
+                        var content = $(post).html().replace(/<fieldset .*<\/fieldset>/g, "").replace(/<br>/g, "\n").replace(/<\/p><p>/g, "\n").slice(3).replace(/<[^>]*>/g, "").replace(/LikeQuoteSuppress/g, "").replace(/LikeQuote/g, "").trim()
+                        notifyDesktop(poster, content);
                     }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
