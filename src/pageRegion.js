@@ -17,7 +17,7 @@ function regionPage(regionSettings) {
             }
         });
     }
-    
+
     //--------------------
     //NS++ newspapers
     if (settings.nsppNewspaper) {
@@ -26,7 +26,7 @@ function regionPage(regionSettings) {
                 if (nsppNewspaper.newspaper_id) {
                     if (!nsppNewspaper.title)
                         nsppNewspaper.title = "Click Here";
-                    
+
                     $('<p><strong>Newspaper:</strong> <a href="https://nationstatesplusplus.net/newspaper?id=' + nsppNewspaper.newspaper_id + '">' + nsppNewspaper.title + '</a></p>').insertAfter($("strong:contains(Founder:)").parent());
                 }
             }
@@ -72,23 +72,23 @@ function regionPage(regionSettings) {
             $(".rmbolder").hide(); //GO AWAI!
 
             $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
-            
+
             //Add scroll detector
             $('<div id="infiniteScroll" style="border: 1px #CCC solid; border-radius: 12px; margin-top: 4px; margin-bottom: 4px; padding: 0 8px 0 12px; background-color: #FDFFFC; text-align: center; font-weight: bold; margin-left: 18%; margin-right: 18%; min-height: 18px; color: #AAA;"></div>')
                 .html("Infinite Scroll!")
                 .insertAfter(rmb.parent());
-            
+
             infiniteScroll();
         }
     }
-    
+
 
     //--------------------
     //Live RMB updates
     if (settings["liveRMBupdate"]) {
         updateRMB();
     }
-    
+
     //--------------------
     //Security code updater
     $("form#rmb").submit(onPostRMB);
@@ -125,6 +125,10 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                     rmbOffset += 1;
                     if (settings["soundRMBupdate"]) {
                         notifySound();
+                    }
+                    if (settings["desktopRMBupdate"]) {
+                        var poster = $(post).find("a.nlink span").text();
+                        notifyDesktop("RMB post from " + poster, "");
                     }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
