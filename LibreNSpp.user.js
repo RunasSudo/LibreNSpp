@@ -619,8 +619,15 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                         notifySound();
                     }
                     if (settings["desktopRMBupdate"]) {
-                        var poster = $(post).find("a.nlink span").text();
-                        notifyDesktop("RMB post from " + poster, "");
+                        var poster = $(post).find(".rmbauthor2 a.nlink span").text();
+                        var content = $(post).find(".rmbmsg2").html()
+                                       .replace(/<fieldset .*<\/fieldset>/g, "")
+                                       .replace(/<div class="rmbnewlabel">New<\/div>/g, "")
+                                       .replace(/<br>/g, "\n").replace(/<\/p><p>/g, "\n")
+                                       .slice(3).replace(/<[^>]*>/g, "")
+                                       .replace(/LikeQuoteSuppress/g, "").replace(/LikeQuote/g, "").trim();
+                        var quotee = $(post).find(".rmbquoted legend a.nlink span").text();
+                        notifyDesktop(poster, (quotee !== "" ? "(quoting " + quotee + ") " : "") + content);
                     }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
