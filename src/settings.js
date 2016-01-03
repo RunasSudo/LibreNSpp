@@ -44,7 +44,7 @@ function loadSettings() {
     loadSettingNumber("updateSpeed", 5000);
     //Danger!
     loadSettingBool("nagPuppets", false);
-    
+
     return settings;
 }
 
@@ -60,6 +60,7 @@ function manageSettings() {
     pageContent += '<h2>LibreNS++ Features</h2>';
     pageContent += '<input type="checkbox" id="infiniteRMBScroll"><label for="infiniteRMBScroll">Enable infinite RMB scroll.</label><br>';
     pageContent += '<input type="checkbox" id="liveRMBupdate"><label for="liveRMBupdate">Enable live RMB updates.</label><br>';
+    pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="desktopRMBupdate"><label for=desktopRMBupdate">Send a desktop notification when a new RMB post arrives.</label><br>';
     pageContent += '&nbsp;&nbsp;&nbsp;<input type="checkbox" id="soundRMBupdate"><label for="soundRMBupdate">Play the notification sound when a new RMB post arrives.</label><br>';
     pageContent += '<audio>&nbsp;&nbsp;&nbsp;If you can see this text, the notification sound is not supported by your browser.<br></audio>';
     pageContent += '<input type="checkbox" id="infiniteTelegram" disabled><label for="infiniteTelegram">Enable infinite telegram folders.</label><br>';
@@ -88,16 +89,17 @@ function manageSettings() {
     if (settings["updateSpeed"] < 5000) {
         $("#updateSpeedWarning").show();
     }
-    
+
     function settingCheckbox(setting) {
         $("#" + setting).prop("checked", settings[setting]);
     }
-    
+
     //Updates
     settingCheckbox("autoUpdate");
     //LibreNS++ Features
     settingCheckbox("infiniteRMBScroll");
     settingCheckbox("liveRMBupdate");
+    settingCheckbox("desktopRMBupdate");
     settingCheckbox("soundRMBupdate");
     settingCheckbox("regionCustomise");
     settingCheckbox("regionIRC");
@@ -112,20 +114,20 @@ function manageSettings() {
     $("#updateSpeed").val(settings["updateSpeed"]);
     //Danger!
     settingCheckbox("nagPuppets");
-    
+
     $("#cosmetic, #floatingSidebar").prop("disabled", rift ? undefined : "needs Rift");
-    
+
     $("#librensppSettings input[type='checkbox']").change(function() {
         NS_setValue("setting_" + this.id, this.checked);
     });
-    
+
     $("#librensppSettings input[type='number'], #librensppSettings input[type='text']").change(function() {
         NS_setValue("setting_" + this.id, this.value);
     });
-    
+
     //-------------------------
     //Setting-specific handlers
-    
+
     $("#updateSpeed").change(function() {
         if (Number($("#updateSpeed").val()) < 5000) {
             $("#updateSpeedWarning").show();
@@ -133,6 +135,6 @@ function manageSettings() {
             $("#updateSpeedWarning").hide();
         }
     });
-    
+
     $("#testDing").click(notifySound);
 }
