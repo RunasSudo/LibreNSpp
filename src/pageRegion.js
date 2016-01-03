@@ -134,8 +134,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                                        .replace(/<br>/g, "\n").replace(/<\/p><p>/g, "\n")
                                        .slice(3).replace(/<[^>]*>/g, "")
                                        .replace(/LikeQuoteSuppress/g, "").replace(/LikeQuote/g, "").trim();
-                        var quotee = $(post).find(".rmbquoted legend a.nlink span").text();
-                        notifyDesktop(poster, (quotee !== "" ? "(quoting " + quotee + ") " : "") + content);
+                        notifyDesktop(poster, content);
                     }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
