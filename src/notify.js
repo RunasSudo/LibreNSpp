@@ -1,3 +1,4 @@
+// -------------------------
 // Notification sound only
 function loadNotifySound() {
     $("body").prepend('<audio id="librenspp-notification-sound"><source type="audio/ogg" src="data:audio/ogg;base64,asset(notify.ogg)"></audio>');
@@ -7,6 +8,7 @@ function notifySound() {
     $("audio#librenspp-notification-sound").get(0).play();
 }
 
+// -------------------------
 // dot notifications
 function signal() {
     appendSignal("#librenspp", "!");
@@ -26,6 +28,7 @@ function appendSignal(query, content) {
     }
 }
 
+// -------------------------
 // Desktop notification API
 function notifyDesktop(title, text) {
   function give() {
