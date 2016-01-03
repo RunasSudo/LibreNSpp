@@ -1,3 +1,4 @@
+// Notification sound only
 function loadNotifySound() {
     $("body").prepend('<audio id="librenspp-notification-sound"><source type="audio/ogg" src="data:audio/ogg;base64,asset(notify.ogg)"></audio>');
 }
@@ -6,6 +7,7 @@ function notifySound() {
     $("audio#librenspp-notification-sound").get(0).play();
 }
 
+// dot notifications
 function signal() {
     appendSignal("#librenspp", "!");
 }
@@ -22,4 +24,30 @@ function appendSignal(query, content) {
         }
         $(query + " a .notificationnumber2").html("(" + content + ")").show();
     }
+}
+
+// Desktop notification API
+function notifyDesktop(title, text) {
+  function give() {
+    Notification(title, {body: text});
+  }
+
+  if (!("Notification") in window) {
+    return;
+  }
+
+  if (Notification.permission === "granted") {
+    give();
+    return;
+  }
+
+  if (Notification.permission === "denied") {
+    return;
+  }
+
+  Notification.requestPermission(function(per) {
+    if (per === "granted") {
+      give();
+    }
+  });
 }
