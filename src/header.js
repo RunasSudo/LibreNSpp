@@ -31,4 +31,4 @@
 
 var version = "m4_include(../version)";
 
-m4_define(`asset', `m4_esyscmd(base64 "assets/$1" | tr -d "\n")')
+m4_define(`asset', `m4_esyscmd(base64 "assets/$1" | tr -d "\r\n")')
