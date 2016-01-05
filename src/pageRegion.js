@@ -131,6 +131,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                         var content = $(post).find(".rmbmsg2").html()
                                        .replace(/<fieldset .*<\/fieldset>/g, "")
                                        .replace(/<div class="rmbnewlabel">New<\/div>/g, "")
+                                       .replace(/<div class="rmbbuttons">.*<\/div>/g, "")
                                        .replace(/<br>/g, "\n").replace(/<\/p><p>/g, "\n")
                                        .slice(3).replace(/<[^>]*>/g, "")
                                        .replace(/LikeQuoteSuppress/g, "").replace(/LikeQuote/g, "").trim();
