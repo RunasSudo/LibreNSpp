@@ -126,6 +126,10 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
                     if (settings["soundRMBupdate"]) {
                         notifySound();
                     }
+                    if (settings["desktopRMBupdate"]) {
+                        var poster = $(post).find("a.nlink span").text();
+                        notifyDesktop("RMB post from " + poster, "");
+                    }
                 } else {
                     $("div#" + post.id).html($(post).html()).linkify();
                 }
