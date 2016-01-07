@@ -6,7 +6,7 @@ var latestversion = version;
 function run() {
     rift = $(".bel.bannernation").length == 1;
     allPage();
-
+    
     //--------------------
     //Region page things
     if (getPageBits().length == 1 && getPageBits()[0].indexOf("region=") == 0) { //Are we on the RMB page?
@@ -28,7 +28,7 @@ function run() {
         if (!foundSettings)
             regionPage({});
     }
-
+    
     //--------------------
     //Dispatch editors
     if (getPageBits().length == 2 && getPageBits()[0] == "page=dispatch") {
@@ -38,7 +38,7 @@ function run() {
     if (getPageBits().length == 3 && getPageBits()[0] == "page=create_dispatch" && getPageBits()[2] == "x-librenspp=regionalSettings") {
         dispatchEditor();
     }
-
+    
     //--------------------
     //Puppet manager
     if (getPageBits().length == 2 && getPageBits()[0] == "page=blank" && getPageBits()[1] == "x-librenspp=puppets") {

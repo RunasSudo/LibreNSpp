@@ -34,20 +34,20 @@ function notifyDesktop(title, text) {
   function give() {
     new Notification(title, {body: text});
   }
-
+  
   if (!("Notification") in window) {
     return;
   }
-
+  
   if (Notification.permission === "granted") {
     give();
     return;
   }
-
+  
   if (Notification.permission === "denied") {
     return;
   }
-
+  
   Notification.requestPermission(function(per) {
     if (per === "granted") {
       give();

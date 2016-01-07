@@ -37,7 +37,7 @@ function managePuppets() {
     pageContent += '<tr><td>Password:</td><td><input id="puppetPassword" type="password"></td></tr>';
     pageContent += '<tr><td><input id="puppetCreate" type="button" value="Create new puppets" disabled></td><td><input id="puppetAdd" type="button" value="Add puppet"></td></tr></table></form>';
     $("#content").html(pageContent);
-
+    
     $("#puppetAdd").click(function() {
         if ($("#puppetUsername").val().length > 0 && $("#puppetPassword").val().length > 0) {
             NS_setValue("puppet_p_" + $("#puppetUsername").val().toLowerCase().replace(" ", "_"), btoa($("#puppetUsername").val()) + ":" + btoa($("#puppetPassword").val()));
@@ -45,19 +45,19 @@ function managePuppets() {
             populatePuppetManager();
         }
     });
-
+    
     populatePuppetManager();
 }
 
 function populatePuppets() {
     $("#listPuppets").html("<br>");
-
+    
     var allSettings = NS_listValues();
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
             var value = NS_getValue(allSettings[i]);
             var link = $('<a href="javascript:void(0);">' + atob(value.substring(0, value.indexOf(":"))) + '</a>');
-
+            
             link.click(makeSwitchPuppetHandler(value));
             $("#listPuppets").prepend('<br>');
             $("#listPuppets").prepend(link);
@@ -67,18 +67,18 @@ function populatePuppets() {
 
 function populatePuppetManager() {
     $("#puppetList").html("");
-
+    
     var allSettings = NS_listValues();
     for (i = 0; i < allSettings.length; i++) {
         if (allSettings[i].indexOf("puppet_p_") == 0) {
             var value = NS_getValue(allSettings[i]);
-
+            
             var linkDelete = $('<a href="javascript:void(0);">Delete</a>');
             linkDelete.click(makeDeletePuppetHandler(allSettings[i]));
-
+            
             var li = $('<li> | ' + atob(value.substring(0, value.indexOf(":"))) + '</li>');
             li.prepend(linkDelete);
-
+            
             $("#puppetList").prepend(li);
         }
     }
@@ -89,7 +89,7 @@ function makeSwitchPuppetHandler(value) {
         $("#loginbox input[name='nation']").val(atob(value.substring(0, value.indexOf(":"))));
         $("#loginbox input[name='password']").val(atob(value.substring(value.indexOf(":") + 1)));
         $("#loginbox input[name='autologin']").prop("checked", true);
-
+        
         //Nasty hack follows
         //Note to self: Never give submit button name="submit"
         HTMLFormElement.prototype.submit.call(document.getElementById("loginbox").getElementsByTagName("form")[0]);

@@ -32,7 +32,7 @@ function regionPage(regionSettings) {
             }
         });
     }
-
+    
     //--------------------
     //Embedded IRC
     if (settings.regionCustomise && settings.regionIRC && regionSettings.irc) {
@@ -59,7 +59,7 @@ function regionPage(regionSettings) {
             }
         });
     }
-
+    
     //--------------------
     //Infinite RMB scroll
     if (settings["infiniteRMBScroll"]) {
@@ -70,7 +70,7 @@ function regionPage(regionSettings) {
                 rmb.prepend(entry); //Reverse order so newest are at top.
             });
             $(".rmbolder").hide(); //GO AWAI!
-
+            
             $("form#rmb").insertBefore(rmb.parent()); //Move the 'Leave a Message' form.
             
             //Add scroll detector
@@ -82,7 +82,7 @@ function regionPage(regionSettings) {
         }
     }
     
-
+    
     //--------------------
     //Live RMB updates
     if (settings["liveRMBupdate"]) {
@@ -143,7 +143,7 @@ function updateRMB() { //Triggered at intervals. Looks for live RMB updates.
             }
         });
     });
-
+    
     setTimeout(updateRMB, settings["updateSpeed"]);
 }
 
