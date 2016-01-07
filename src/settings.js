@@ -30,7 +30,7 @@ function loadSettings() {
     //LibreNS++ Features
     loadSettingBool("infiniteRMBScroll", true);
     loadSettingBool("liveRMBupdate", true);
-    loadSettingBool("desktopRMBupdate", true);
+    loadSettingBool("desktopRMBupdate", false);
     loadSettingBool("soundRMBupdate", false);
     loadSettingBool("regionCustomise", true);
     loadSettingBool("regionIRC", true);
